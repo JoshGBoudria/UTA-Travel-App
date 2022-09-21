@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang = "en">
+	<head>
+		<link rel = "manifest" href = "static/manifest.json" />
+		<meta charset = "UTF-8" >
+		<meta name = "viewport" content = "width = device-width, initial-scale = 1.0" >
+		<meta http-equiv = "X-UA-Compatible" content = "ie = edge" >
+		<link rel = "stylesheet" href = "static/style.css" >
+		<script src = "static/app.js"> </script>
+		<title> UTA Japan Trip PWA </title>
+		<link rel = "shortcut icon" href = "#">
+	</head>
+	<body>
+		<script>
+			if("serviceWorker" in navigator)
+			{
+				navigator.serviceWorker.register("{{url_for('static', filename = 'serviceWorker.js')}}").then(registration =>
+				{
+					console.log("Service worker registered");
+					console.log(registration);
+				}).catch(error =>
+				{
+					console.log("Service worker registration failed")
+					console.log(error)
+				});
+			}
+		</script>
+		<main>
+			<nav>
+				<ul>
+					<li> <a href = "./" >Home</a> </li>
+					<li> <a href = "/translation_page" >Translations</a> </li>
+					<li>Itinerary</li>
+					<li>Emergency Contact</li>
+				</ul>
+			</nav>
+		</main>
+	</body>
+</html>
+
