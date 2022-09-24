@@ -1,0 +1,51 @@
+<!doctype html>
+<HTML lang = "en">
+<head>
+	<link rel = "shortcut icon" href = "#">
+	<title>Currency Converter</title>
+</head>
+<body>
+	<h1>Currency Converter</h1>
+	<form>
+		<label>From:</label>
+		<select id = "from">
+			<option value = "JPY">Japanese Yen</option>
+			<option value = "USD">US Dollars</option>
+		</select>
+		<label>To:</label>
+		<select id = "to">
+			<option value = "USD">US Dollars</option>
+			<option value = "JPY">Japanese Yen</option>
+		</select>
+		<label>Amount:</label>
+		<input type = "text" id = "amount" />
+		<button type = "button" id = "convert">Convert</button>
+		<p id = "result"></p>
+	</form>
+	<script>
+		const convert = document.getElementById("convert");
+		const result = document.getElementById("result");
+		const from = document.getElementById("from");
+		const to = document.getElementById("to");
+		const amount = document.getElementById("amount");
+		convert.addEventListener("click", function()
+		{
+			let fromCurrency = from.value;
+			let toCurrency = to.value;
+			let amt = amount.value;
+			fetch(`https://api.exchangerate-api.com/v4/latest/${fromCurrency}`)
+			.then(response =>
+			{
+				return response.json();
+			})
+			.then(data =>
+			{
+				let rate = data.rates[toCurrency];
+				console.log(rate);
+				let total = rate * amt;
+				result.innerHTML = `${amt} ${fromCurrency} = ${total} ${toCurrency}`;
+			});
+			});
+	</script>
+</body>
+</html>
