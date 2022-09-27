@@ -1,0 +1,62 @@
+.App {
+  text-align: center;
+  font-size: 40px
+}
+
+img {
+    height: 300px;
+    align-items: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-Converter {
+}
+
+.App-Translation {
+  justify-content: space-between;
+  text-align: center;
+  font-size: 25px
+}
+
+input, button {
+    height: 40px;
+    width: 100px;
+    color: #61dafb;
+}
+
+.App-header {
+  background-image: url("ipb.jpg");
+  background-size: cover;
+  min-height: 720px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 50px; 
+  font-weight: bold;
+  font-family: noble family; 
+  color: red;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
