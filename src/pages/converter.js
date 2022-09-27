@@ -1,6 +1,7 @@
 /* 
  * Shane Purdy 1001789955
- * 
+ * Partial code implementation from Imram Alam - https://www.tutorialspoint.com/how-to-create-a-currency-converter-in-javascript
+ * Including API usage for exchange rates - https://www.exchangerate-api.com/
  */
 
 import React from "react";
