@@ -16,8 +16,8 @@ const Itinerary = () =>
 		//   and reload the page
 		if (document.getElementById("code").value === process.env.REACT_APP_LOGIN_CODE)
 		{
-			Cookies.set("code_cookie", "T", {
-				expires: 1,
+			Cookies.set("code_cookie", process.env.REACT_APP_LOGIN_CODE, {
+				expires: 14,
 				secure: true,
 				path: "/",
 			});
@@ -34,7 +34,7 @@ const Itinerary = () =>
 		}
 	};
 
-	if (Cookies.get("code_cookie") === "T")
+	if (Cookies.get("code_cookie") === process.env.REACT_APP_LOGIN_CODE)
 	{
 		// Render the itinerary
 		return (
@@ -52,7 +52,7 @@ const Itinerary = () =>
 				<label Text style={{ fontSize: 14 }}>
 					Enter code provided by professor to see the itinerary:
 				</label>
-				<input type="text" id="code" />
+				<input type="password" id="code" />
 				<button onClick={check_code} type="button">
 					Submit
 				</button>
