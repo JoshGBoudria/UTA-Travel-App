@@ -6,9 +6,11 @@
 
 import React from "react";
 import Cookies from "js-cookie";
+//import { ErrorResponse } from "@remix-run/router";
 
 const Itinerary = () =>
 {
+
 	// Checks if the user entered the correct code
 	const check_code = () =>
 	{
@@ -49,6 +51,7 @@ const Itinerary = () =>
 		// Render the code insertion box and button
 		return (
 			<div>
+				<p id="ip_address"></p>
 				<label Text style={{ fontSize: 14 }}>
 					Enter code provided by professor to see the itinerary:
 				</label>

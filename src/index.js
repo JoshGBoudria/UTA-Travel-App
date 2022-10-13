@@ -1,4 +1,5 @@
 /*
+ * Shane Purdy 1001789955
  * Bryson Neel 1001627866 
  */
 
@@ -24,6 +25,7 @@ if ("serviceWorker" in navigator) {
 // If the user is online
 if (navigator.onLine)
 {
+	console.log('Getting rate');
 	// Get the yen to dollar rate
 	fetch(`https://api.exchangerate-api.com/v4/latest/JPY`)
 	.then(response =>

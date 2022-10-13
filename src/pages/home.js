@@ -4,23 +4,9 @@
  * 
  */
 
-
 import React from "react";
 //import 'App.css';
 /*import 'index.css';*/
-
-/*if ("serviceWorker" in navigator)
-{
-	navigator.serviceWorker.register('serviceWorker.js').then(registration =>
-	{
-		console.log("Service worker registered");
-		console.log(registration);
-	}).catch(error =>
-	{
-		console.log("Service worker registration failed")
-		console.log(error)
-	});
-}*/
 
 const Home = () =>
 {

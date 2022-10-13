@@ -14,7 +14,7 @@ const Translation = () =>
 				{/* Link to the shorcut icon so that audio components display properly */}
 				<link rel="shortcut icon" href="#" />
 			</head>
-			{/* Create a list without bullet points*/}
+			{/* Create a list without bullet points */}
 			<ul style={{ listStyleType: "none" }}>
 				<li>
 					Do you speak English?

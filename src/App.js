@@ -1,3 +1,8 @@
+/*
+ * Shane Purdy 1001789955
+ * Bryson Neel 1001627866
+*/
+
 import React from 'react';
 //import logo from './logo.svg';
 import './App.css';
