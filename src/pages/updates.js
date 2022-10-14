@@ -6,10 +6,15 @@
 
 import React from "react";
 import Cookies from "js-cookie";
-//import { ErrorResponse } from "@remix-run/router";
 
-const Itinerary = () =>
+const Updates = () =>
 {
+	// Called when the update button is pressed (haven't implemented yet)
+	const update_text = () =>
+	{
+		// TODO: code that handles when someone creates a new update
+	}
+
 	// Checks if the user entered the correct code
 	const check_code = () =>
 	{
@@ -38,11 +43,12 @@ const Itinerary = () =>
 
 	if (Cookies.get("code_cookie") === process.env.REACT_APP_LOGIN_CODE)
 	{
-		// Render the itinerary
+		// Render the updates
 		return (
 			<div>
-				{/*Creates the header for the itinerary and calendar.*/}
-				<h1> Itinerary and Calendar </h1>
+				{/*Creates the header for the updates page.*/}
+				<h1> Updates </h1>
+				<p id="updates_text"></p>
 			</div>
 		);
 	}
@@ -53,7 +59,7 @@ const Itinerary = () =>
 			<div>
 				<p id="ip_address"></p>
 				<label Text style={{ fontSize: 14 }}>
-					Enter code provided by professor to view the itinerary and calendar:&nbsp;
+					Enter code provided by professor to view the updates:&nbsp;
 				</label>
 				<input type="password" id="code" />
 				<button onClick={check_code} type="button">
@@ -65,4 +71,4 @@ const Itinerary = () =>
 	}
 };
 
-export default Itinerary;
+export default Updates;

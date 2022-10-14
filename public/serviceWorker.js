@@ -1,7 +1,8 @@
 // Import Workbox for serviceWorker functions
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.0.2/workbox-sw.js');
 
-const static_assets = [
+const static_assets =
+[
 	'/index.html',
 	'/app.js',
 	'/app.css',
@@ -19,7 +20,7 @@ const static_assets = [
 	'/pages/dropbox.js',
 	'/pages/home.js',
 	'/pages/itinerary.js',
-	'/pages/login.js',
+	'/pages/updates.js',
 	'/pages/translation.js',
 	'/pages/translator.js',
 	'./translations/Do-You-Speak-English.mp3',
@@ -40,7 +41,8 @@ const static_assets = [
 	'./translations/That-Is-Alright.mp3',
 	'./translations/Where-Is-Restroom.mp3',
 	'./translations/Yes.mp3',
-	'./translations/You-Are-Welcome.mp3'];
+	'./translations/You-Are-Welcome.mp3'
+];
 
 // Runs when the serviceWorker is installed
 self.addEventListener('install', e =>

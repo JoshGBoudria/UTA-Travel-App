@@ -1,7 +1,7 @@
 /* 
  * Shane Purdy 1001789955
  * Bryson Neel
- * 19 phrases to translate
+ * 
  */
 
 import React from "react";
@@ -36,6 +36,7 @@ const Translation = () =>
 							Your browser does not support HTML5 audio.
 						</audio>
 					</p>
+					{/* TODO: Display the rest of the translations */}
 				</li>
 			</ul >
 		</>

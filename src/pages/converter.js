@@ -8,7 +8,6 @@
 
 import React from "react";
 import Cookies from "js-cookie";
-//import { useLinkClickHandler } from "react-router-dom";
 import '../App.css';
 
 // Does the currency conversion when called
@@ -60,14 +59,14 @@ function convert()
 		// If the cookie value doesn't exist or isn't a number, let the user know that the rate couldn't be accessed.
 		else
 		{
-			document.getElementById("rate_not_found").innerHTML = "Conversion rate could not be accessed";
+			document.getElementById("result").innerHTML = "Conversion rate could not be accessed";
 		}
 	}
-
 }
 
 const Converter = () =>
 {
+	// UI display
 	return (
 		<div class="App-Converter">
 			<head>
@@ -79,7 +78,7 @@ const Converter = () =>
 				<form>
 
 					{/* Create 2 drop-down boxes for the user to choose which currency is
-					 * being converted to and which is being converted from */}
+					  * being converted to and which is being converted from */}
 					<label Text style={{ fontSize: 16 }}> From: </label>
 					<select id="from">
 						<option value="JPY">Japanese Yen</option>
@@ -97,9 +96,8 @@ const Converter = () =>
 					{ /* Create button that calls 'convert' when clicked */}
 					<button onClick={convert} type="button" >Convert</button>
 
-					{ /* Used to display the resulting conversion */}
+					{ /* Used to display the resulting conversion or error message*/}
 					<p id="result"></p>
-					<p id="rate_not_found"></p>
 				</form>
 			</body>
 		</div>

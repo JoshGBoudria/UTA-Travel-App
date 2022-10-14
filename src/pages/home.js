@@ -13,6 +13,7 @@ const Home = () =>
 	return (
 		<>
 			<head>
+				{/* Link the manifest.json file so that the PWA can be intalled */}
 				<link rel="manifest" href="manifest.json" />
 				<link rel="shortcut icon" href="#" />
 				<meta charset="UTF-8" />
@@ -24,7 +25,6 @@ const Home = () =>
 			<div>
 				{/*Creates the header for the Home page.*/}
 				<header className="App-header">
-					<p> UTA Travel </p>
 				</header>
 			</div>
 		</>

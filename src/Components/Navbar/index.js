@@ -25,14 +25,17 @@ const Navbar = () => {
                     <NavLink to="/converter" activeStyle>
                         Currency Converter
                     </NavLink>
+                    <NavLink to="/translation" activeStyle>
+                        Audible Translations
+                    </NavLink>
                     <NavLink to="/dropbox" activeStyle>
                         Dropbox
                     </NavLink>
                     <NavLink to="/itinerary" activeStyle>
                         Itinerary and Calendar
                     </NavLink>
-                    <NavLink to="/translation" activeStyle>
-                        Audible Translation
+                    <NavLink to="/updates" activeStyle>
+                        Updates
                     </NavLink>
                 </NavMenu>
             </Nav>

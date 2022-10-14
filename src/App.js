@@ -16,6 +16,7 @@ import Converter from './pages/converter';
 import Dropbox from './pages/dropbox';
 import Itinerary from './pages/itinerary';
 import Translation from './pages/translation';
+import Updates from './pages/updates';
 
 function App()
 {
@@ -25,14 +26,13 @@ function App()
 			<Router>
 				<Navbar />
 				<Routes>
-					{/* <Route exact path='/' element={<Index />} /> */}
-					{/* <Route exact path='/home' element={<Home />} /> */}
 					<Route exact path='/' element={<Home />} />
 					<Route path='/contacts' element={<Contacts />} />
 					<Route path='/converter' element={<Converter />} />
 					<Route path='/dropbox' element={<Dropbox />} />
 					<Route path='/itinerary' element={<Itinerary />} />
 					<Route path='/translation' element={<Translation />} />
+					<Route path='/updates' element={<Updates />} />
 				</Routes>
 			</Router>
 		</div>

@@ -5,14 +5,15 @@
 
 
 import React from "react";
-  
-const Translator = () => {
-  return (
-    <div>
-      {/*Header for the written translator page.*/}
-      <h1> Written Translator </h1>
-    </div>
-  );
+
+const Translator = () =>
+{
+	return (
+		<div>
+			{/*Header for the written translator page.*/}
+			<h1> Written Translator </h1>
+		</div>
+	);
 };
-  
+
 export default Translator;
