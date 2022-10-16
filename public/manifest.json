@@ -144,34 +144,6 @@
 				}
 			]
 		},
-		{
-			"name": "Updates",
-			"description": "Updates from the ",
-			"url": "/updates",
-			"icons":
-			[
-				{
-					"src": "flag64.png",
-					"sizes": "64x64",
-					"type": "image/png"
-				},
-				{
-					"src": "flag96.png",
-					"sizes": "96x96",
-					"type": "image/png"
-				},
-				{
-					"src": "flag144.png",
-					"sizes": "144x144",
-					"type": "image/png"
-				},
-				{
-					"src": "flag192.png",
-					"sizes": "192x192",
-					"type": "image/png"
-				}
-			]
-		}
 	],
 	"icons":
 	[
