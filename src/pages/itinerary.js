@@ -34,10 +34,10 @@ function get_events(date)
 		// getMonth() gives number from 0-11, so you need to add 1
 		const month = date.getMonth() + 1;
 
-		var months = ["January", "February", "March", "April", "May", "June", 
-		"July", "August", "September", "October", "November", "December"];
+		var months = ["January", "February", "March", "April", "May", "June",
+			"July", "August", "September", "October", "November", "December"];
 
-		document.getElementById('time_display').innerHTML = `${months[month - 1]} ${day}`;
+		document.getElementById('date_display').innerHTML = `${months[month - 1]} ${day}`;
 
 		// Gets events from 6AM to 9PM
 		for (var i = 6; i < 22; i += 1)
@@ -64,7 +64,8 @@ function get_events(date)
 
 			if (v === null || typeof v === 'undefined')
 			{
-				v = '';
+				// Set v equal to a single space if there's no event for that time
+				v = '&nbsp';
 			}
 
 			// Create the new document element and use it to display the time and event
@@ -81,11 +82,18 @@ function get_events(date)
 	}
 }
 
+// Modifies the current date by 'amount' then calls 'get_events()' with that date
+function update_date(amount, date)
+{
+	date.setDate(date.getDate() + amount);
+	get_events(date);
+	return date;
+}
+
 const Itinerary = () =>
 {
 	window.onload = function ()
 	{
-		//process.env.REACT_APP_2_d = 'yeees';
 		get_events(new Date());
 	};
 
@@ -94,23 +102,23 @@ const Itinerary = () =>
 	{
 		// If the user enters the correct code, set the cookie value 'code_cookie' to the code
 		//   value and reload the page
-		if (document.getElementById("code").value === process.env.REACT_APP_LOGIN_CODE)
+		if (document.getElementById('code').value === process.env.REACT_APP_LOGIN_CODE)
 		{
-			Cookies.set("code_cookie", process.env.REACT_APP_LOGIN_CODE,
+			Cookies.set('code_cookie', process.env.REACT_APP_LOGIN_CODE,
 				{
 					expires: 14,
 					secure: true,
-					path: "/",
+					path: '/',
 				});
 			window.location.reload(false);
 		}
 		// Otherwise, the user will see the text "Wrong code" for 2000 ms
 		else
 		{
-			document.getElementById("wrong_code").innerHTML = "Wrong code";
+			document.getElementById("wrong_code").innerHTML = 'Wrong code';
 			setTimeout(function ()
 			{
-				document.getElementById("wrong_code").innerHTML = "";
+				document.getElementById("wrong_code").innerHTML = '';
 			}, 2000);
 		}
 	};
@@ -118,14 +126,26 @@ const Itinerary = () =>
 	// If the code in the cookie file is correct, display the itinerary
 	if (Cookies.get("code_cookie") === process.env.REACT_APP_LOGIN_CODE)
 	{
-		const current_date = new Date();
+		// Keeps track on the date of the current events displayed
+		var current_date = new Date();
 
-		// Modifies the current date by 'amount' then calls 'get_events()' with that date
-		function update_date(amount)
+		// If the date isn't displaying, 'get_events()' needs to be called, but
+		//   wait 100 ms before doing it because the elements need to load first
+		if (!document.getElementById('date_display'))
 		{
-			current_date.setDate(current_date.getDate() + amount);
-			console.log(amount);
-			get_events(current_date);
+
+			setTimeout(function ()
+			{
+				get_events(new Date());
+			}, 100);
+		}
+		else if (document.getElementById('date_display').innerHTML === 'Date')
+		{
+			setTimeout(function ()
+			{
+				get_events(new Date());
+			}, 100);
+			
 		}
 
 		return (
@@ -133,18 +153,29 @@ const Itinerary = () =>
 				{/*Creates the header for the itinerary and calendar.*/}
 				<h1> Itinerary and Calendar </h1>
 
-				<h2 id='date_display'></h2>
+				<h2 id='date_display'>Date</h2>
 
-				{/* TODO: Fix these 2 buttons so they call update_date with these args */}
-				{/* Sets the date back by 1 when clicked */}
-				<button type="button" onClick={update_date(-1)}>
+				<script type="text/javascript">
+					current_date = update_date(0);
+				</script>
+
+				{/* When clicked, sets the date back by 1 and updates the events on screen */}
+				<button type="button" onClick={() =>
+				{
+					current_date = update_date(-1, current_date);
+				}}
+				>
 
 					{/* Display the '<' symbol on the button */}
 					&lt;
 				</button>
 
-				{/* Sets the date forward by 1 when clicked */}
-				<button type="button" onClick={update_date(1)}>
+				{/* When clicked, sets the date forward by 1 and updates the events on screen */}
+				<button type="button" onClick={() =>
+				{
+					current_date = update_date(1, current_date);
+				}}
+				>
 
 					{/* Display the '>' symbol on the button */}
 					&gt;
@@ -152,7 +183,7 @@ const Itinerary = () =>
 
 				{/* TODO: change style so that 'time_display' shows up on the left
 					  and 'event_display shows up on the right'  */}
-				<ul style={{ 'list-style': 'none', 'display': 'inline-block'}}>
+				<ul style={{ 'list-style': 'none', 'display': 'inline-block' }}>
 					<li>
 						{/* Used to display the times for each day */}
 						<p id='time_display' style=
