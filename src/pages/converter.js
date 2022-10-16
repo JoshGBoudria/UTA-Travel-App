@@ -2,13 +2,14 @@
  * Shane Purdy 1001789955
  * Bryson Neel 1001627866
  *
- * Partial code implementation from Imram Alam - https://www.tutorialspoint.com/how-to-create-a-currency-converter-in-javascript
+ * Partial code implementation from Imram Alam -
+ * https://www.tutorialspoint.com/how-to-create-a-currency-converter-in-javascript
  * Including API usage for exchange rates - https://www.exchangerate-api.com/
  */
 
 import React from "react";
 import Cookies from "js-cookie";
-import '../App.css';
+//import '../App.css';
 
 // Does the currency conversion when called
 function convert()
@@ -20,7 +21,6 @@ function convert()
 	const amount = document.getElementById("amount").value;
 	let fromCurrency = from.value;
 	let toCurrency = to.value;
-	result.innerHTML = `${from} + ${to}`;
 
 	// If the user is online, get the rate from the api to do the conversion.
 	if (navigator.onLine)
@@ -45,7 +45,9 @@ function convert()
 				});
 
 				// Calculate and display the currency conversion
-				result.innerHTML = `${amount} ${fromCurrency} = ${parseFloat(rate * amount).toFixed(2)} ${toCurrency}`;
+				const res = `${amount} ${fromCurrency} = ${parseFloat(rate * amount).toFixed(2)} ${toCurrency}`;
+				result.innerHTML = res;
+				
 			});
 
 	}
