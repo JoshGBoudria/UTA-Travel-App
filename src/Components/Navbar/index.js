@@ -15,12 +15,12 @@ const Navbar = () => {
             <Nav>
                 {/* Creates the layout for the navbar at the top of the screen.*/}
                 <NavMenu>
-                    { /* <NavLink to="/home" activeStyle> */}
+                    { /* Links to each page */}
                     <NavLink to="/" activeStyle>
                         Home
                     </NavLink>
-                    <NavLink to="/contacts" activeStyle>
-                        Emergency Contacts
+                    <NavLink to="/itinerary" activeStyle>
+                        Itinerary and Calendar
                     </NavLink>
                     <NavLink to="/converter" activeStyle>
                         Currency Converter
@@ -31,11 +31,8 @@ const Navbar = () => {
                     <NavLink to="/dropbox" activeStyle>
                         Dropbox
                     </NavLink>
-                    <NavLink to="/itinerary" activeStyle>
-                        Itinerary and Calendar
-                    </NavLink>
-                    <NavLink to="/updates" activeStyle>
-                        Updates
+                    <NavLink to="/contacts" activeStyle>
+                        Emergency Contacts
                     </NavLink>
                 </NavMenu>
             </Nav>
