@@ -10,18 +10,18 @@ import styled from "styled-components";
   
 // Creates the style for the nav.
 export const Nav = styled.nav`
-  font-size: 20px;
+  font-size: 25px;
   background: #77bbcc;
-  height: 85px;
+  height: 55px;
   display: flex;
   justify-content: space-between;
-  padding: 0.2rem calc((100vw - 1000px) / 2);
+  padding: 0.3rem calc((100vw - 1000px) / 2);
   z-index: 12;
 `;
   
 // Creates the style for the words in the navmenu.
 export const NavLink = styled(Link)`
-  font-size: 20px;
+  font-size: 22px;
   color: #808080;
   display: flex;
   align-items: center;
