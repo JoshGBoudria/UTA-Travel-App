@@ -188,14 +188,14 @@ const Itinerary = () =>
 						{/* Used to display the times for each day */}
 						<p id='time_display' style=
 							{{
-								'text-align': 'left', 'margin-left': '50px'
+								'text-align': 'left', 'margin-left': '-500px'
 							}}></p>
 					</li>
 					<li>
 						{/* Used to display the events for each day */}
 						<p id='event_display' style=
 							{{
-								'text-align': 'right', 'margin-right': '50px'
+								'text-align': 'right', 'margin-right': '100px'
 							}}></p>
 					</li>
 				</ul>
