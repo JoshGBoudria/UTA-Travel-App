@@ -17,27 +17,40 @@ const Dropbox = () =>
 	// Checks if the user entered the correct code
 	const check_code = () =>
 	{
-		// If the user enters the correct code, set the cookie value 'code_cookie' to 'T'
-		//   and reload the page
-		if (document.getElementById("code").value === process.env.REACT_APP_LOGIN_CODE)
+		// If the user is offline
+		if (!navigator.onLine)
 		{
-			Cookies.set("code_cookie", process.env.REACT_APP_LOGIN_CODE,
-				{
-					expires: 14,
-					secure: true,
-					path: "/",
-				});
-			// Refresh the page
-			window.location.reload(false);
-		}
-		// Otherwise, the user will see the text "Wrong code" for 2000 ms
-		else
-		{
-			document.getElementById("wrong_code").innerHTML = "Wrong code";
+			// Let the user know that the code couldn't be verified
+			document.getElementById("wrong_code").innerHTML = "Code can not be verified offline";
 			setTimeout(function ()
 			{
-				document.getElementById("wrong_code").innerHTML = "";
-			}, 2000);
+				document.getElementById("wrong_code").innerHTML = '';
+			}, 2800);
+		}
+		else
+		{
+			// If the user enters the correct code, set the cookie value 'code_cookie' to 'T'
+			//   and reload the page
+			if (document.getElementById("code").value === process.env.REACT_APP_LOGIN_CODE)
+			{
+				Cookies.set("code_cookie", process.env.REACT_APP_LOGIN_CODE,
+					{
+						expires: 14,
+						secure: true,
+						path: "/",
+					});
+				// Refresh the page
+				window.location.reload(false);
+			}
+			// Otherwise, the user will see the text "Wrong code" for 2000 ms
+			else
+			{
+				document.getElementById("wrong_code").innerHTML = "Wrong code";
+				setTimeout(function ()
+				{
+					document.getElementById("wrong_code").innerHTML = "";
+				}, 2000);
+			}
 		}
 	};
 
