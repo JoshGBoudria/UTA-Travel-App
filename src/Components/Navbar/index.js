@@ -16,22 +16,22 @@ const Navbar = () => {
                 {/* Creates the layout for the navbar at the top of the screen.*/}
                 <NavMenu>
                     { /* Links to each page */}
-                    <NavLink to="/" activeStyle>
+                    <NavLink to="/" activestyle='true'>
                         Home
                     </NavLink>
-                    <NavLink to="/itinerary" activeStyle>
+                    <NavLink to="/itinerary" activestyle='true'>
                         Itinerary and Calendar
                     </NavLink>
-                    <NavLink to="/converter" activeStyle>
+                    <NavLink to="/converter" activestyle='true'>
                         Currency Converter
                     </NavLink>
-                    <NavLink to="/translation" activeStyle>
+                    <NavLink to="/translation" activestyle='true'>
                         Audible Translations
                     </NavLink>
-                    <NavLink to="/dropbox" activeStyle>
+                    <NavLink to="/dropbox" activestyle='true'>
                         Dropbox
                     </NavLink>
-                    <NavLink to="/contacts" activeStyle>
+                    <NavLink to="/contacts" activestyle='true'>
                         Emergency Contacts
                     </NavLink>
                 </NavMenu>
