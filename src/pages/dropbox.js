@@ -6,48 +6,98 @@
  */
 
 
-import React/*, { useState }*/ from "react";
+import React, { useCallback, useState, useRef } from "react";
 import { useDropzone } from 'react-dropzone';
 import Cookies from "js-cookie";
+//import axios from 'axios';
+import { initializeApp, applicationDefault, cert, getApps, getApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { arrayUnion, getFirestore, updateDoc, addDoc, getDocs, where, collection, serverTimestamp, doc, onSnapshot, orderBy, query, QuerySnapshot } from 'firebase/firestore';
+import { getDownloadURL, getStorage, uploadBytes, ref } from 'firebase/storage';
+//import { async } from '@firebase/util';
+//import { useEffect } from "react";
+//import Image from 'next/image';
+//import { withCookies } from "react-cookie";
 
-const Dropbox = (props) =>
+const firebaseConfig =
 {
-	const
+	apiKey: "AIzaSyDWkmItJirMLZ9MotrBuJ_GthRl24cMxO4",
+	authDomain: "uta-travel-abroad.firebaseapp.com",
+	databaseURL: "https://uta-travel-abroad-default-rtdb.firebaseio.com",
+	projectId: "uta-travel-abroad",
+	storageBucket: "uta-travel-abroad.appspot.com",
+	messagingSenderId: "1097972700841",
+	appId: "1:1097972700841:web:bc6d8ab59aff357dc53bb8",
+	measurementId: "G-SGP45GK6DJ"
+};
+  
+// Initialize Firebase
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+const analytics = getAnalytics(app);
+const db = getFirestore();
+const storage = getStorage();
+var getImagesBool = true;
+
+const Dropbox = () =>
+{
+	// Contains the images uploaded by the user
+	const [selectedImages, setSelectedImages] = useState([]);
+	const captionRef = useRef(null);
+	const uploadPost = async() =>
+	{
+		// Add a new document into the 'posts' collection using a caption entered by the user
+		//   and the current timestamp
+		const docRef = await addDoc(collection(db, 'posts'),
 		{
-			acceptedFiles,
-			fileRejections,
-			getRootProps,
-			getInputProps
-		} = useDropzone({
-			// Users can only upload jpg and png images (later change to allow videos, too)
-			accept:
-			{
-				'image/jpg': [],
-				'image/png': []/*,
-				'video/mp4': [],
-				'video/mov': [],
-				'video/avi': []*/
-			},
+			caption: captionRef.current.value,
+			timestamp: serverTimestamp()
 		});
+		// For each image the user uploaded, add it to the FireBase storage and include the
+		//   urls in the new 'posts' document
+		await Promise.all(
+			selectedImages.map(image =>
+			{
+				const imageRef = ref(storage, `posts/${image.path}`);
+				uploadBytes(imageRef, image, 'data_url').then(async() =>
+				{
+					const downloadURL = await getDownloadURL(imageRef);
+					await updateDoc(doc(db, 'posts', docRef.id),
+					{
+						images:arrayUnion(downloadURL)
+					})
+				})
+			})
+		)
+		// Reset the captionRef and SelectedImages to empty
+		captionRef.current.value = '';
+		setSelectedImages([]);
+	}
+	const onDrop = useCallback(acceptedFiles =>
+	{
+		setSelectedImages(acceptedFiles.map(file =>
+			Object.assign(file,
+			{
+				preview:URL.createObjectURL(file)
+			})
+		));
+	}, []);
+	const {getRootProps, getInputProps} = useDropzone({onDrop});
 
-	const acceptedFileItems = acceptedFiles.map(file => (
-		<li key={file.path}>
-			{file.path} - {file.size} bytes
-		</li>
-	));
+	// Gets the images from the FireBase storage to display to the user
+	async function getImages()
+	{
+		// Query to retrieve the images from the database
+		const q = query(collection(db, "posts"), orderBy(`images`));
+		const querySnapshot = await getDocs(q);
 
-	const fileRejectionItems = fileRejections.map(({ file, errors }) => (
-		<li key={file.path}>
-			{file.path} - {file.size} bytes
-			<ul>
-				{errors.map(e => (
-					<li key={e.code}>{e.message}</li>
-				))}
-			</ul>
-		</li>
-	));
-
-
+		// Display each image from the query
+		querySnapshot.forEach((doc) =>
+		{
+			var img = document.createElement('img');
+			img.src = doc.data().images;
+			document.getElementById('images_display').appendChild(img);
+		});
+	}
 
 	// Checks if the user entered the correct code
 	const check_code = () =>
@@ -91,25 +141,39 @@ const Dropbox = (props) =>
 
 	if (Cookies.get("code_cookie") === process.env.REACT_APP_LOGIN_CODE)
 	{
+		if (getImagesBool === true)
+		{
+			getImagesBool = false;
+			setTimeout(function ()
+			{
+				getImages();
+			}, 1000);	
+		}
 		return (
 			<div>
 				{/*The header for the Dropbox.*/}
 				<h1> Dropbox </h1>
 				{/* File upload */}
-				<input {...getInputProps()} />
-				<div {...getRootProps({ className: 'dropzone' })}>
-					<input {...getInputProps()} />
-					{/* Display the upload icon */}
-					<svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-upload" width="100" height="100" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+				<div>
+					<div {...getRootProps()}>
+						<input {...getInputProps()} />
+						{/* Display the upload icon */}
+						<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-upload" width="100" height="100" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
 						<path stroke="none" d="M0 0h24v24H0z" fill="none" />
 						<path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
 						<polyline points="7 9 12 4 17 9" />
 						<line x1="12" y1="4" x2="12" y2="16" />
 					</svg>
-					<p>Tap to upload file</p>
-					<em>(.jpeg or .png)</em>
+						<p>Tap or drag and drop to upload image</p>
+					</div>
+					<input ref={captionRef} type="text" placeholder='Enter file name'/>
+					<button onClick={uploadPost}>Submit</button>
+					{/* image(s) to be uploaded */}
 				</div>
-				<div>{acceptedFileItems}</div>
+				<div>
+					{/* where all images on the database are displayed */}
+					<div id='images_display'></div>
+				</div>
 			</div>
 		);
 	}
