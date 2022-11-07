@@ -37,8 +37,9 @@ input, button {
 .App-header {
   background-image: url("ipb.jpg");
   background-size: cover;
+  background-position: center;
   min-height: 720px;
-  display: flex;
+  display: block;
   flex-direction: column;
   align-items: center;
   justify-content: center;
