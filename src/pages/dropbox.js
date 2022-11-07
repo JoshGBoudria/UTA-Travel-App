@@ -12,7 +12,7 @@ import Cookies from "js-cookie";
 //import axios from 'axios';
 import { initializeApp, /*applicationDefault, cert,*/ getApps, getApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { arrayUnion, getFirestore, updateDoc, addDoc, getDocs, where, collection, serverTimestamp, doc, onSnapshot, orderBy, query, QuerySnapshot } from 'firebase/firestore';
+import { arrayUnion, getFirestore, updateDoc, addDoc, getDocs, /*where,*/ collection, serverTimestamp, doc, onSnapshot, orderBy, query/*, QuerySnapshot*/ } from 'firebase/firestore';
 import { getDownloadURL, getStorage, uploadBytes, ref } from 'firebase/storage';
 //import { async } from '@firebase/util';
 //import { useEffect } from "react";
@@ -61,18 +61,9 @@ async function getCodes(adminB)
 	return retval;
 }
 
-// Get the encrypted admin and regular codes from the database
-//async function getCodesHere()
-//{
-	//adminCode = await getCodes(true)
-	//regularCode = await getCodes(false);
-//}
-
 const adminKey = parseInt(process.env.REACT_APP_ADMIN_ENCRYPTION_KEY, 10);
 const regularKey = parseInt(process.env.REACT_APP_REGULAR_ENCRYPTION_KEY, 10);
 
-// 0: not logged in, 1: regular user, 2: admin user
-var userLevel = 0;
 
 const Dropbox = () =>
 {
@@ -123,8 +114,13 @@ const Dropbox = () =>
 				captionElem.value = '';
 			}
 		}
-		
 		setSelectedImages([]);
+		// The image takes a while to upload (more than 20 seconds, I think)
+
+		//setTimeout(function ()
+		//{
+			//window.location.reload();
+		//}, 4000);
 	}
 	const onDrop = useCallback(acceptedFiles =>
 	{
@@ -294,27 +290,27 @@ const Dropbox = () =>
 		// Check the code from the cookie file, and set the userLevel accordingly
 		if (Cookies.get('admin') == adminCode)
 		{
-			userLevel = 2;
+			// sessionStorage variables persist even after the page is refreshed
+			sessionStorage.setItem('_userLevel', '2');
 			// Refresh the page
-			//window.location.reload();
+			window.location.reload();
 		}
 		else if (Cookies.get('regular') == regularCode)
 		{
-			userLevel = 1;
+			sessionStorage.setItem('_userLevel', '1');
 			// Refresh the page
-			//window.location.reload();
+			window.location.reload();
 		}
 		else
 		{
-			userLevel = 0;
+			sessionStorage.setItem('_userLevel', '0');
 			// Refresh the page
-			//window.location.reload();
+			window.location.reload();
 		}
 	}
 
 	// Display admin view if the user has the correct value for the admin cookie
-	// CHANGE TO if (userLevel === 2)
-	if (userLevel === 2)
+	if (sessionStorage.getItem('_userLevel') === '2')
 	{
 		if (getImagesBool === true)
 		{
@@ -353,7 +349,7 @@ const Dropbox = () =>
 		);
 	}
 	// Display regular view if the user has the correct value for the regular cookie
-	else if (userLevel === 1)
+	else if (sessionStorage.getItem('_userLevel') === '1')
 	{
 		if (getImagesBool === true)
 		{
