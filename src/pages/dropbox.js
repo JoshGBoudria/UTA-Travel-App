@@ -64,6 +64,16 @@ async function getCodes(adminB)
 const adminKey = parseInt(process.env.REACT_APP_ADMIN_ENCRYPTION_KEY, 10);
 const regularKey = parseInt(process.env.REACT_APP_REGULAR_ENCRYPTION_KEY, 10);
 
+// TODO: remove these lines for final deliverable
+if (typeof adminKey !== 'number')
+{
+	adminKey = 80186011;
+}
+if (typeof regularKey !== 'number')
+{
+	regularKey = 39436201;
+}
+
 
 const Dropbox = () =>
 {
