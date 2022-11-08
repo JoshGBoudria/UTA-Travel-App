@@ -84,10 +84,10 @@ const Dropbox = () =>
 		// Add a new document into the 'posts' collection using a caption entered by the user
 		//   and the current timestamp
 		const docRef = await addDoc(collection(db, 'posts'),
-			{
-				caption: capVal,
-				timestamp: serverTimestamp()
-			});
+		{
+			caption: capVal,
+			timestamp: serverTimestamp()
+		});
 		// For each image the user uploaded, add it to the FireBase storage and include the
 		//   urls in the new 'posts' document
 		await Promise.all(
@@ -100,13 +100,14 @@ const Dropbox = () =>
 					// Add the download URLs to the new 'posts' document
 					const downloadURL = await getDownloadURL(imageRef);
 					await updateDoc(doc(db, 'posts', docRef.id),
-						{
-							images: arrayUnion(downloadURL)
-						});
+					{
+						images: arrayUnion(downloadURL)
+					});
 				});
 			})
 		)
-		// Reset the captionElem and SelectedImages to empty
+		// Reset the 'caption' element and SelectedImages to empty and the 'dropzone_text'
+		//   element to its default value
 		if (captionElem !== null)
 		{
 			if (typeof captionElem.value === 'string')
@@ -115,6 +116,11 @@ const Dropbox = () =>
 			}
 		}
 		setSelectedImages([]);
+		if (document.getElementById('dropzone_text') !== null)
+		{
+			document.getElementById('dropzone_text').innerHTML = 'Tap, click, or drag and drop to upload images';
+		}
+		alert('Upload complete');
 		// The image takes a while to upload (more than 20 seconds, I think)
 
 		//setTimeout(function ()
@@ -124,14 +130,32 @@ const Dropbox = () =>
 	}
 	const onDrop = useCallback(acceptedFiles =>
 	{
+		// Let the user know how many files are pending for upload
+		const numFilesPending = acceptedFiles.length;
+		if (document.getElementById('dropzone_text') !== null)
+		{
+			document.getElementById('dropzone_text').innerHTML = numFilesPending + ' file(s) pending <br /> Tap submit to upload them';
+		}
 		setSelectedImages(acceptedFiles.map(file =>
 			Object.assign(file,
-				{
-					preview: URL.createObjectURL(file)
-				})
+			{
+				preview: URL.createObjectURL(file)
+			})
 		));
 	}, []);
-	const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
+	// When the user interacts with the Dropzone element
+	const { getRootProps, getInputProps } = useDropzone(
+	{
+		// Only accept png and jpg image files
+		accept:
+		{
+			'image/png': ['.png'],
+			'text/jpg': ['.jpg']
+		},
+		// Function that handles what happens after
+		onDrop
+	});
 
 	// Gets the images from the FireBase storage to display to the user
 	async function getImages()
@@ -161,8 +185,6 @@ const Dropbox = () =>
 	{
 		const adminCode = await getCodes(true);
 		const regularCode = await getCodes(false);
-		//console.log(adminCode);
-		//console.log(regularCode);
 
 		var fromCookieOnly = false;
 
@@ -229,7 +251,8 @@ const Dropbox = () =>
 						{
 							// Multiply whatever the user entered by the admin encryption key,
 							//   and check if that value equals the admin code from the database
-							if (((codeInput * adminKey) + 3 > adminCode) && ((codeInput * adminKey) - 3 < adminCode))
+							//if (((codeInput * adminKey) + 3 > adminCode) && ((codeInput * adminKey) - 3 < adminCode))
+							if ((codeInput * adminKey) === adminCode)
 							{
 								// If they entered the correct admin code, set the cookie so that
 								//   they remain logged in
@@ -240,7 +263,8 @@ const Dropbox = () =>
 										path: "/",
 									});
 							}
-							else if (((codeInput * regularKey) + 3 > regularCode) && ((codeInput * regularKey) - 3 < regularCode))
+							//else if (((codeInput * regularKey) + 3 > regularCode) && ((codeInput * regularKey) - 3 < regularCode))
+							else if ((codeInput * regularKey) === regularCode)
 							{
 								// If they entered the correct regular code, set the cookie so that
 								//   they remain logged in
@@ -335,7 +359,7 @@ const Dropbox = () =>
 							<polyline points="7 9 12 4 17 9" />
 							<line x1="12" y1="4" x2="12" y2="16" />
 						</svg>
-						<p>Tap, click, or drag and drop to upload image</p>
+						<p id='dropzone_text'>Tap, click, or drag and drop to upload images</p>
 					</div>
 					<input ref={captionRef} type="text" placeholder='optional caption' />
 					<button onClick={uploadPost}>Submit</button>
@@ -374,7 +398,7 @@ const Dropbox = () =>
 							<polyline points="7 9 12 4 17 9" />
 							<line x1="12" y1="4" x2="12" y2="16" />
 						</svg>
-						<p>Tap, click, or drag and drop to upload image</p>
+						<p id='dropzone_text'>Tap, click, or drag and drop to upload images</p>
 					</div>
 					<input id='caption' type="text" placeholder='optional caption' />
 					<button onClick={uploadPost}>Submit</button>
