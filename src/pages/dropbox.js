@@ -120,7 +120,22 @@ const Dropbox = () =>
 		{
 			document.getElementById('dropzone_text').innerHTML = 'Tap, click, or drag and drop to upload images';
 		}
-		alert('Upload complete');
+
+		// If no images were uploaded, let the user know
+		if (selectedImages === null)
+		{
+			alert('No files uploaded (png/jpg only)');
+		}
+		else if(selectedImages.length < 1)
+		{
+			alert('No files uploaded (png/jpg only)');
+		}
+		// Otherwise, let the user know how many images were uploaded
+		else
+		{
+			alert(`${selectedImages.length} image(s) uploaded`);
+		}
+		
 		// The image takes a while to upload (more than 20 seconds, I think)
 
 		//setTimeout(function ()
