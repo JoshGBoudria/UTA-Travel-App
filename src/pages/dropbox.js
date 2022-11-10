@@ -6,19 +6,19 @@
  */
 
 
-import React, { useCallback, useState, useRef } from "react";
+import React, { useCallback, useState/*, useEffect, useRef*/ } from "react";
 import { useDropzone } from 'react-dropzone';
 import Cookies from "js-cookie";
 //import axios from 'axios';
 import { initializeApp, /*applicationDefault, cert,*/ getApps, getApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { arrayUnion, getFirestore, updateDoc, addDoc, getDocs, /*where,*/ collection, serverTimestamp, doc, deleteDoc, onSnapshot, orderBy, query/*, QuerySnapshot*/ } from 'firebase/firestore';
+import { arrayUnion, getFirestore, updateDoc, addDoc, getDocs,/* where,*/ collection, serverTimestamp, doc, deleteDoc, onSnapshot, orderBy, query, /*QuerySnapshot,*/ enableIndexedDbPersistence } from 'firebase/firestore';
 import { getDownloadURL, getStorage, uploadBytes, ref } from 'firebase/storage';
 //import { async } from '@firebase/util';
-//import { useEffect } from "react";
 //import Image from 'next/image';
 //import { withCookies } from "react-cookie";
 
+// Initialize Firebase
 const firebaseConfig =
 {
 	apiKey: "AIzaSyDWkmItJirMLZ9MotrBuJ_GthRl24cMxO4",
@@ -30,42 +30,29 @@ const firebaseConfig =
 	appId: "1:1097972700841:web:bc6d8ab59aff357dc53bb8",
 	measurementId: "G-SGP45GK6DJ"
 };
-
-// Initialize Firebase
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const analytics = getAnalytics(app);
 const db = getFirestore();
 const storage = getStorage();
-var getImagesBool = true;
 
-//var fileURLs = [];
-
-/*
-async function deleteFile(postTimestamp)
-{
-	await deleteDoc(doc(db, "cities", "DC"));
-
-	// Create a reference to the file to delete
-	var fileRef = storage.refFromURL(url);
-  
-	console.log("File in database before delete exists : " 
-		+ fileRef.exists());
-  
-	// Delete the file using the delete() method 
-	fileRef.delete().then(function ()
+// Enable db persistence so that Firestore files can be cached and
+//   accessed offline
+enableIndexedDbPersistence(db)
+	.catch((err) =>
 	{
-		// File deleted successfully
-		console.log("File Deleted")
-	}).catch(function (error)
-	{
-		console.log(error);
+		if (err.code == 'failed-precondition')
+		{
+			// Multiple tabs open, persistence can only be enabled
+			//   in one tab at a a time.
+		}
+		else if (err.code == 'unimplemented')
+		{
+			// The current browser does not support all of the
+			//   features required to enable persistence
+		}
 	});
-	console.log("File in database after delete exists : "
-		+ fileRef.exists());
-}
-*/
 
-
+sessionStorage.setItem('_getImagesBool', 'T');
 
 // Gets the encrypted codes from the Firestore database
 //   If adminB is true, return the admin code; otherwise, return
@@ -90,36 +77,10 @@ async function getCodes(adminB)
 	return retval;
 }
 
-const adminKey = parseInt(process.env.REACT_APP_ADMIN_ENCRYPTION_KEY, 10);
-const regularKey = parseInt(process.env.REACT_APP_REGULAR_ENCRYPTION_KEY, 10);
-
-// remove these lines for final deliverable
-/*if (typeof adminKey !== 'number')
-{
-	adminKey = 80186011;
-}
-if (typeof regularKey !== 'number')
-{
-	regularKey = 39436201;
-}*/
-
 
 const Dropbox = () =>
 {
 	const [selectedImages, setSelectedImages] = useState([]);
-
-	/* (copied these lines to the uploadPost block)
-	const captionRef = useRef(null);
-	const captionElem = document.getElementById('caption');
-	var capVal = '';
-	if (captionElem !== null)
-	{
-		if (typeof captionElem.value === 'string')
-		{
-			capVal = captionElem.value;
-		}
-	}
-	*/
 
 	const uploadPost = async () =>
 	{
@@ -215,14 +176,11 @@ const Dropbox = () =>
 		// Show files pending
 		acceptedFiles.forEach((image) =>
 		{
-
-			//var div = document.createElement('div');
-			//div.innerHTML = doc.data().caption;
+			// Show the images pending for upload
 			var img = document.createElement('img');
 			img.src = URL.createObjectURL(image);
 			if (pendingFilesElem !== null)
 			{
-				//pendingFilesElem.appendChild(div);
 				pendingFilesElem.appendChild(img);
 			}
 		});
@@ -266,16 +224,11 @@ const Dropbox = () =>
 		const querySnapshot = await getDocs(q);
 		var imagesElem = document.getElementById('images_display');
 
-		//fileURLs = [];
-
 		// Display each image from the query
 		querySnapshot.forEach((doc) =>
 		{
 			if (imagesElem !== null)
 			{
-				// Add each file URL to the fileURLs array
-				//fileURLs.push(doc.data().images);
-
 				var verticalSpace = document.createElement('Text');
 				verticalSpace.innerHTML = '<br />';
 
@@ -309,7 +262,7 @@ const Dropbox = () =>
 				icon.append(path2);
 				*/
 
-				// Create the delete button and includes the post's id in
+				// Create the delete button and include the post's id in
 				//   the button's id
 				var deleteButton = document.createElement('button');
 				deleteButton.innerHTML = 'Delete';
@@ -377,51 +330,32 @@ const Dropbox = () =>
 	async function check_code()
 	{
 		var wrongCodeElem = document.getElementById("wrong_code");
-		if (wrongCodeElem !== null)
-		{
-			wrongCodeElem.innerHTML = 'Checking code...';
-		}
-		const adminCode = await getCodes(true);
-		const regularCode = await getCodes(false);
 
-		var fromCookieOnly = false;
-
-		var codeElem = document.getElementById("code");
-		var codeInput = document.getElementById("code").value;
-		if (codeElem !== null)
+		if (navigator.onLine)
 		{
-			codeInput = parseInt(codeElem.value, 10);
-			if (typeof codeInput !== 'number')
+			if (wrongCodeElem !== null)
 			{
-				fromCookieOnly = true;
-				alert('From cookie only is true');
+				wrongCodeElem.innerHTML = 'Checking code...';
 			}
-		}
+			const adminCode = await getCodes(true);
+			const regularCode = await getCodes(false);
 
-		// Element used to display error messages to the user
+			var fromCookieOnly = false;
 
-
-		// If the code only needs to be checked from the cookie file, then you don't
-		//   need to do this part
-		if (!fromCookieOnly)
-		{
-			if (!navigator.onLine)
+			var codeElem = document.getElementById("code");
+			var codeInput = document.getElementById("code").value;
+			if (codeElem !== null)
 			{
-				if (wrongCodeElem !== null)
+				codeInput = parseInt(codeElem.value, 10);
+				if (typeof codeInput !== 'number')
 				{
-					// Let the user know that the code couldn't be verified
-					wrongCodeElem.innerHTML = "Code can\'t be verified offline";
-					setTimeout(function ()
-					{
-						if (wrongCodeElem !== null)
-						{
-							wrongCodeElem.innerHTML = '';
-						}
-					}, 2800);
+					fromCookieOnly = true;
 				}
 			}
-			// If the user is online
-			else
+
+			// If the code only needs to be checked from the cookie file, then you don't
+			//   need to do this part
+			if (!fromCookieOnly)
 			{
 				// If getCodes() returns non-numbers for both codes, then that means there 
 				//   aren't any codes in the database (very bad if this occurs because the
@@ -431,122 +365,125 @@ const Dropbox = () =>
 					if (wrongCodeElem !== null)
 					{
 						wrongCodeElem.innerHTML = 'Can\'t verify code (couldn\'t retrieve from database)';
-						setTimeout(function ()
+						/*setTimeout(function ()
 						{
 							if (wrongCodeElem !== null)
 							{
 								wrongCodeElem.innerHTML = "";
 							}
-						}, 3000);
+						}, 3000);*/
 					}
 				}
 				else
 				{
-					//var codeElem = document.getElementById("code");
-					//if (typeof codeInput === 'number')  // (commented out for being redundant)
-					//{
-					if (typeof adminKey === 'number' && typeof regularKey === 'number')
+					if ((codeInput/* * adminKey*/) === adminCode)
 					{
-						// Multiply whatever the user entered by the admin encryption key,
-						//   and check if that value equals the admin code from the database
-						//if (((codeInput * adminKey) + 3 > adminCode) && ((codeInput * adminKey) - 3 < adminCode))
-						if ((codeInput * adminKey) === adminCode)
-						{
-							// If they entered the correct admin code, set the cookie so that
-							//   they remain logged in
-							alert('Admin cookie set');
-							Cookies.set("admin", adminCode,
-								{
-									expires: 100,
-									secure: true,
-									path: "/",
-								});
-						}
-						//else if (((codeInput * regularKey) + 3 > regularCode) && ((codeInput * regularKey) - 3 < regularCode))
-						else if ((codeInput * regularKey) === regularCode)
-						{
-							// If they entered the correct regular code, set the cookie so that
-							//   they remain logged in
-							alert('Regular cookie set');
-							Cookies.set("regular", regularCode,
-								{
-									expires: 100,
-									secure: true,
-									path: "/",
-								});
-						}
-						// Otherwise, the user will see the text "Wrong code" for 2000 ms
-						else
-						{
-							if (wrongCodeElem !== null)
+						// If they entered the correct admin code, set the cookie so that
+						//   they remain logged in
+						Cookies.set("admin", adminCode,
 							{
-								wrongCodeElem.innerHTML = 'Wrong code';
-								setTimeout(function ()
-								{
-									if (wrongCodeElem !== null)
-									{
-										wrongCodeElem.innerHTML = '';
-									}
-								}, 2000);
-							}
-						}
+								expires: 100,
+								secure: true,
+								path: "/",
+							});
 					}
+					else if ((codeInput/* * regularKey*/) === regularCode)
+					{
+						// If they entered the correct regular code, set the cookie so that
+						//   they remain logged in
+						Cookies.set("regular", regularCode,
+							{
+								expires: 100,
+								secure: true,
+								path: "/",
+							});
+					}
+					// Otherwise, the user will see the text "Wrong code" for 2000 ms
 					else
 					{
 						if (wrongCodeElem !== null)
 						{
-							wrongCodeElem.innerHTML = 'Code can\'t be verified (environment variable(s) missing)';
-							setTimeout(function ()
+							wrongCodeElem.innerHTML = 'Wrong code';
+							/*setTimeout(function ()
 							{
 								if (wrongCodeElem !== null)
 								{
 									wrongCodeElem.innerHTML = '';
 								}
-							}, 2000);
+							}, 2000);*/
 						}
 					}
-					//}
 				}
-			}
-		}
-		// (end of if (!fromCookieOnly))
+			}  // (end of if (!fromCookieOnly))
 
-		// Check the code from the cookie file, and set the userLevel accordingly
-		if (Cookies.get('admin') == adminCode)
-		{
-			alert('Admin verified');
-			// sessionStorage variables persist even after the page is refreshed
-			sessionStorage.setItem('_userLevel', '2');
-			// Refresh the page
-			window.location.reload();
-		}
-		else if (Cookies.get('regular') == regularCode)
-		{
-			alert('Regular verified');
-			sessionStorage.setItem('_userLevel', '1');
-			// Refresh the page
-			window.location.reload();
+			// Check the code from the cookie file, and set the userLevel accordingly
+			if (Cookies.get('admin') == adminCode)
+			{
+				// sessionStorage variables persist even after the page is refreshed
+				sessionStorage.setItem('_userLevel', '2');
+				// Refresh the page
+				window.location.reload();
+			}
+			else if (Cookies.get('regular') == regularCode)
+			{
+				sessionStorage.setItem('_userLevel', '1');
+				// Refresh the page
+				window.location.reload();
+			}
+			else
+			{
+				sessionStorage.setItem('_userLevel', '0');
+				// Refresh the page
+				window.location.reload();
+			}
 		}
 		else
 		{
-			alert('Wrong code verified');
-			sessionStorage.setItem('_userLevel', '0');
-			// Refresh the page
-			window.location.reload();
+			if (wrongCodeElem !== null)
+			{
+				// Let the user know that the code couldn't be verified
+				wrongCodeElem.innerHTML = "Code can\'t be verified offline";
+				/*setTimeout(function ()
+				{
+					if (wrongCodeElem !== null)
+					{
+						wrongCodeElem.innerHTML = '';
+					}
+				}, 2800);*/
+			}
 		}
 	}
 
 	// Display admin view if the user has the correct value for the admin cookie
 	if (sessionStorage.getItem('_userLevel') === '2')
 	{
-		if (getImagesBool === true)
+		if (sessionStorage.getItem('_getImagesBool') === 'T')
 		{
-			getImagesBool = false;
+			sessionStorage.setItem('_getImagesBool', 'F');
 			setTimeout(function ()
 			{
 				getImages();
 			}, 1000);
 		}
+		const q = query(collection(db, "posts"));
+		const unsubscribe = onSnapshot(q, (snapshot) =>
+		{
+			snapshot.docChanges().forEach((change) =>
+			{
+				if (change.type === "added")
+				{
+					console.log("New city: ", change.doc.data());
+				}
+				if (change.type === "modified")
+				{
+					console.log("Modified city: ", change.doc.data());
+				}
+				if (change.type === "removed")
+				{
+					console.log("Removed city: ", change.doc.data());
+				}
+			});
+		});
 		return (
 			<div>
 				{/*The header for the Dropbox.*/}
@@ -581,9 +518,9 @@ const Dropbox = () =>
 	// Display regular view if the user has the correct value for the regular cookie
 	else if (sessionStorage.getItem('_userLevel') === '1')
 	{
-		if (getImagesBool === true)
+		if (sessionStorage.getItem('_getImagesBool') === 'T')
 		{
-			getImagesBool = false;
+			sessionStorage.setItem('_getImagesBool', 'F');
 			setTimeout(function ()
 			{
 				getImages();
