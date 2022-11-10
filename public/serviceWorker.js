@@ -7,6 +7,10 @@ const static_assets =
 	'/app.js',
 	'/app.css',
 	'/ipb.jpg',
+	'/bamboo.jpg',
+	'/building.jpg',
+	'/grapes.jpg',
+	'sega.jpg',
 	'/manifest.json',
 	'/flag64.png',
 	'/flag96.png',
@@ -61,7 +65,7 @@ self.addEventListener('install', e =>
 // Runs when a fetch request is made to the serviceWorker
 self.addEventListener('fetch', (e) =>
 {
-	console.log(`Fetch request for ${e.request.url}`);
+	//console.log(`Fetch request for ${e.request.url}`);
 	e.respondWith(
 		caches.match(e.request).then(response =>
 		{
