@@ -53,7 +53,7 @@ enableIndexedDbPersistence(db)
 
 sessionStorage.setItem('_getImagesBool', 'T');
 
-// Gets the encrypted codes from the Firestore database
+// Gets the codes from the Firestore database
 //   If adminB is true, return the admin code; otherwise, return
 //   the regular code
 async function getCodes(adminB)
@@ -382,7 +382,7 @@ const Dropbox = () =>
 				}
 				else
 				{
-					if ((codeInput/* * adminKey*/) === adminCode)
+					if (codeInput === adminCode)
 					{
 						// If they entered the correct admin code, set the cookie so that
 						//   they remain logged in
@@ -393,7 +393,7 @@ const Dropbox = () =>
 								path: "/",
 							});
 					}
-					else if ((codeInput/* * regularKey*/) === regularCode)
+					else if (codeInput === regularCode)
 					{
 						// If they entered the correct regular code, set the cookie so that
 						//   they remain logged in
@@ -404,20 +404,24 @@ const Dropbox = () =>
 								path: "/",
 							});
 					}
-					// Otherwise, the user will see the text "Wrong code" for 2000 ms
+					// Otherwise, the user will see the text 'Wrong code' if they aren't logged in
 					else
 					{
-						if (wrongCodeElem !== null)
+						if (!((sessionStorage.getItem('_userLevel') === '2') || (sessionStorage.getItem('_userLevel') === '1')))
 						{
-							wrongCodeElem.innerHTML = 'Wrong code';
-							/*setTimeout(function ()
+							if (wrongCodeElem !== null)
 							{
-								if (wrongCodeElem !== null)
+								wrongCodeElem.innerHTML = 'Wrong code';
+								/*setTimeout(function ()
 								{
-									wrongCodeElem.innerHTML = '';
-								}
-							}, 2000);*/
+									if (wrongCodeElem !== null)
+									{
+										wrongCodeElem.innerHTML = '';
+									}
+								}, 2000);*/
+							}
 						}
+						
 					}
 				}
 			}  // (end of if (!fromCookieOnly))
@@ -555,7 +559,6 @@ const Dropbox = () =>
 	{
 		return (
 			<div>
-				{/* <p id="ip_address"></p> */}
 				<label style={{ fontSize: 14 }}>
 					Enter code provided by professor to access the dropbox:&nbsp;
 				</label>
