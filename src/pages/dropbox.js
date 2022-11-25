@@ -5,15 +5,14 @@
  * Open source icon retrieved from https://tablericons.com/ 
  */
 
-
 import React, { useCallback, useState/*, useEffect, useRef*/ } from "react";
 import { useDropzone } from 'react-dropzone';
 import Cookies from "js-cookie";
 //import axios from 'axios';
 import { initializeApp, /*applicationDefault, cert,*/ getApps, getApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { arrayUnion, getFirestore, updateDoc, addDoc, getDocs,/* where,*/ collection, serverTimestamp, doc, deleteDoc, onSnapshot, orderBy, query, /*QuerySnapshot,*/ enableIndexedDbPersistence } from 'firebase/firestore';
-import { getDownloadURL, getStorage, uploadBytes, ref } from 'firebase/storage';
+import { arrayUnion, getFirestore, updateDoc, addDoc, getDocs,/* where,*/ collection, serverTimestamp, doc, deleteDoc, onSnapshot, orderBy, query, /*QuerySnapshot,*/ enableIndexedDbPersistence, getDoc } from 'firebase/firestore';
+import { getDownloadURL, getStorage, uploadBytes, ref, deleteObject, refFromURL } from 'firebase/storage';
 //import { async } from '@firebase/util';
 //import Image from 'next/image';
 //import { withCookies } from "react-cookie";
@@ -84,56 +83,6 @@ const Dropbox = () =>
 
 	const uploadPost = async () =>
 	{
-		const captionElem = document.getElementById('caption');
-		var capVal = '';
-		if (captionElem !== null)
-		{
-			if (typeof captionElem.value === 'string')
-			{
-				capVal = captionElem.value;
-			}
-		}
-		// Add a new document into the 'posts' collection using a caption entered by the user
-		//   and the current timestamp
-		const docRef = await addDoc(collection(db, 'posts'),
-			{
-				caption: capVal,
-				timestamp: serverTimestamp()
-			});
-		// For each image the user uploaded, add it to the FireBase storage and include the
-		//   urls in the new 'posts' document
-		await Promise.all(
-			selectedImages.map(image =>
-			{
-				const imageRef = ref(storage, `posts/${image.path}`);
-				// Upload the image to the Firebase storage
-				uploadBytes(imageRef, image, 'data_url').then(async () =>
-				{
-					// Add the download URLs to the new 'posts' document
-					const downloadURL = await getDownloadURL(imageRef);
-					await updateDoc(doc(db, 'posts', docRef.id),
-						{
-							images: arrayUnion(downloadURL)
-						});
-				});
-			})
-		)
-		// Reset the 'caption' element and SelectedImages to empty and the 'dropzone_text'
-		//   element to its default value
-		if (captionElem !== null)
-		{
-			if (typeof captionElem.value === 'string')
-			{
-				captionElem.value = '';
-			}
-		}
-		setSelectedImages([]);
-		if (document.getElementById('dropzone_text') !== null)
-		{
-			document.getElementById('dropzone_text').innerHTML = 'Tap, click, or drag and drop to upload images';
-		}
-
-		// If no images were uploaded, let the user know
 		if (selectedImages === null)
 		{
 			alert('No files uploaded (png/jpg only)');
@@ -142,14 +91,62 @@ const Dropbox = () =>
 		{
 			alert('No files uploaded (png/jpg only)');
 		}
-		// Otherwise, refresh the page
 		else
 		{
-			alert(`${selectedImages.length} image(s) uploaded. Page will automatically refresh in 10 seconds.`);
+			const captionElem = document.getElementById('caption');
+			var capVal = '';
+			if (captionElem !== null)
+			{
+				if (typeof captionElem.value === 'string')
+				{
+					capVal = captionElem.value;
+				}
+			}
+			// Add a new document into the 'posts' collection using a caption entered by the user
+			//   and the current timestamp
+			const docRef = await addDoc(collection(db, 'posts'),
+				{
+					caption: capVal,
+					timestamp: serverTimestamp()
+				});
+			// For each image the user uploaded, add it to the FireBase storage and include the
+			//   urls in the new 'posts' document
+			await Promise.all(
+				selectedImages.map(image =>
+				{
+					const imageRef = ref(storage, `posts/${image.path}`);
+					// Upload the image to the Firebase storage
+					uploadBytes(imageRef, image, 'data_url').then(async () =>
+					{
+						// Add the download URLs to the new 'posts' document
+						const downloadURL = await getDownloadURL(imageRef);
+						await updateDoc(doc(db, 'posts', docRef.id),
+							{
+								images: arrayUnion(downloadURL)
+							});
+					});
+				})
+			)
+			// Reset the 'caption' element and SelectedImages to empty and the 'dropzone_text'
+			//   element to its default value
+			if (captionElem !== null)
+			{
+				if (typeof captionElem.value === 'string')
+				{
+					captionElem.value = '';
+				}
+			}
+			setSelectedImages([]);
+			if (document.getElementById('dropzone_text') !== null)
+			{
+				document.getElementById('dropzone_text').innerHTML = 'Tap, click, or drag and drop to upload images';
+			}
+			// Let the user know how many images were uploaded and that the page will refresh
+			alert(`${selectedImages.length} image(s) uploaded. Page will automatically refresh in 8 seconds.`);
 			setTimeout(function ()
 			{
 				window.location.reload();
-			}, 10000);
+			}, 8000);
 		}
 		const pendingFilesElem = document.getElementById('pending_files');
 		if (pendingFilesElem !== null)
@@ -242,26 +239,6 @@ const Dropbox = () =>
 				var caption = document.createElement('div');
 				caption.innerHTML = doc.data().caption;
 
-				// Create the trash icon from tablericons.com
-				/*
-				var icon = document.createElement('svg');
-				icon.xmlns = 'http://www.w3.org/2000/svg';
-				icon.height = '44';
-				icon.width = '44';
-				icon.viewBox = '0 0 24 24';
-				icon.stroke = '#2c3e50';
-				var line1 = document.createElement('line');  line1.x1 = '4';  line1.y1 = '7';  line1.x2 = '20';  line1.y2 = '7';
-				var line2 = document.createElement('line');  line2.x1 = '10';  line2.y1 = '11';  line2.x2 = '10';  line2.y2 = '17';
-				var line3 = document.createElement('line');  line3.x1 = '14';  line3.y1 = '11';  line3.x2 = '14';  line3.y2 = '17';
-				var path1 = document.createElement('path');  path1.d = 'M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12';
-				var path2 = document.createElement('path');  path2.d = 'M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3';
-				icon.append(line1);
-				icon.append(line2);
-				icon.append(line3);
-				icon.append(path1);
-				icon.append(path2);
-				*/
-
 				// Create the delete button and include the post's id in
 				//   the button's id
 				var deleteButton = document.createElement('button');
@@ -272,7 +249,6 @@ const Dropbox = () =>
 				imagesElem.appendChild(caption);
 				imagesElem.appendChild(verticalSpace);
 				imagesElem.appendChild(deleteButton);
-				//imagesElem.appendChild(icon);
 				imagesElem.appendChild(verticalSpace);
 				imagesElem.appendChild(verticalSpace);
 				imagesElem.appendChild(verticalSpace);
@@ -288,7 +264,6 @@ const Dropbox = () =>
 				// Only admins are allowed to delete files
 				if (sessionStorage.getItem('_userLevel') === '2')
 				{
-					console.log(e.target.id);
 					// Check to make sure the button clicked was one of the delete buttons
 					//if(e.target && e.target.id.substring(0, 14) == 'delete_button_')
 					if (e.target && (e.target.id).includes('delete_button_'));
@@ -297,22 +272,54 @@ const Dropbox = () =>
 						//   'delete_button_'
 						// Ex: 'delete_button_n35f02fhjo954d3'
 						const idToDelete = e.target.id.substring(14, String(e.target.id).length);
-						console.log(idToDelete);
 
 						// Check if an id was obtained
 						if (typeof idToDelete === 'string')
 						{
 							if (idToDelete !== 'undefined' && idToDelete.length > 16)
 							{
-								// Get the document reference from Firestore using the id, and delete
-								//   that document
+								// Get the document reference from Firestore using the id
 								const docRef = doc(db, "posts", idToDelete);
-								deleteDoc(docRef);
-								alert('File(s) deleted. Page will automatically refresh in 10 seconds');
-								setTimeout(function ()
+								// Becomes false if an image wasn't deleted
+								var successBool = true;
+								//const d = await getDoc(docRef);
+								// Get the image reference from storage, and delete that image
+								getDoc(docRef).then((snapshot) =>
 								{
-									window.location.reload();
-								}, 10000);
+									if (snapshot && snapshot.data() && snapshot.data().images && (snapshot.data().images).length > 0)
+									{
+										snapshot.data().images.forEach((im) =>
+										{
+											const imageRef = ref(storage, im);
+											deleteObject(imageRef).then(() =>
+											{
+												// Delete was successful
+											}).error((error) =>
+											{
+												// Delete was unsuccessful, so set successBool to false
+												successBool = false;
+											});
+										});
+									}
+
+								});
+								// If successBool is true, then every deletion was successful
+								if (successBool)
+								{
+									// Delete the 'posts' document
+									deleteDoc(docRef);
+									// Let the user know that the page will refresh
+									alert('Image(s) successfully deleted. Page will automatically refresh in 8 seconds.');
+									setTimeout(function ()
+									{
+										window.location.reload();
+									}, 8000);
+								}
+								// If successBool is false, then not every deletion was successful
+								else
+								{
+									alert('Delete unsuccessful');
+								}
 							}
 						}
 					}
@@ -320,7 +327,6 @@ const Dropbox = () =>
 				else
 				{
 					alert('Must be logged in with admin code to delete files');
-					// TODO: allow users to re-login using admin code
 				}
 			});
 		}
@@ -466,28 +472,8 @@ const Dropbox = () =>
 			}, 1000);
 		}
 		const q = query(collection(db, "posts"));
-		const unsubscribe = onSnapshot(q, (snapshot) =>
-		{
-			snapshot.docChanges().forEach((change) =>
-			{
-				if (change.type === "added")
-				{
-					console.log("New city: ", change.doc.data());
-				}
-				if (change.type === "modified")
-				{
-					console.log("Modified city: ", change.doc.data());
-				}
-				if (change.type === "removed")
-				{
-					console.log("Removed city: ", change.doc.data());
-				}
-			});
-		});
 		return (
 			<div>
-				{/*The header for the Dropbox.*/}
-				<h1> Dropbox </h1>
 				{/* File upload */}
 				<div>
 					<div {...getRootProps()}>
@@ -528,8 +514,14 @@ const Dropbox = () =>
 		}
 		return (
 			<div>
-				{/*The header for the Dropbox.*/}
-				<h1> Dropbox </h1>
+				<label style={{ fontSize: 14 }}>
+					Enter admin code to delete images:&nbsp;
+				</label>
+				<input type="password" id="code" />
+				<button onClick={check_code} type="button">
+					Submit
+				</button>
+				<p id="wrong_code"></p>
 				{/* File upload */}
 				<div>
 					<div {...getRootProps()}>
@@ -563,7 +555,7 @@ const Dropbox = () =>
 	{
 		return (
 			<div>
-				<p id="ip_address"></p>
+				{/* <p id="ip_address"></p> */}
 				<label style={{ fontSize: 14 }}>
 					Enter code provided by professor to access the dropbox:&nbsp;
 				</label>
