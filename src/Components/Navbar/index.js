@@ -34,6 +34,9 @@ const Navbar = () => {
                     <NavLink to="/contacts" activestyle='true'>
                         Emergency Contacts
                     </NavLink>
+                    <NavLink to="/admin" activestyle='true'>
+                        Admin
+                    </NavLink>
                 </NavMenu>
             </Nav>
         </>
