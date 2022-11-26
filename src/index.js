@@ -11,6 +11,7 @@ import reportWebVitals from './reportWebVitals';
 
 import Cookies from "js-cookie";
 
+
 // Create the serviceWorker so that files can be downloaded to the user's device and accessed offline
 if ("serviceWorker" in navigator) {
 	navigator.serviceWorker.register('/serviceWorker.js').then(registration => {
@@ -25,7 +26,6 @@ if ("serviceWorker" in navigator) {
 // If the user is online
 if (navigator.onLine)
 {
-	console.log('Getting rate');
 	// Get the yen to dollar rate
 	fetch(`https://api.exchangerate-api.com/v4/latest/JPY`)
 	.then(response =>
