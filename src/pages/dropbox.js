@@ -5,17 +5,13 @@
  * Open source icon retrieved from https://tablericons.com/ 
  */
 
-import React, { useCallback, useState/*, useEffect, useRef*/ } from "react";
+import React, { useCallback, useState } from "react";
 import { useDropzone } from 'react-dropzone';
 import Cookies from "js-cookie";
-//import axios from 'axios';
-import { initializeApp, /*applicationDefault, cert,*/ getApps, getApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { arrayUnion, getFirestore, updateDoc, addDoc, getDocs,/* where,*/ collection, serverTimestamp, doc, deleteDoc, onSnapshot, orderBy, query, /*QuerySnapshot,*/ enableIndexedDbPersistence, getDoc } from 'firebase/firestore';
-import { getDownloadURL, getStorage, uploadBytes, ref, deleteObject, refFromURL } from 'firebase/storage';
-//import { async } from '@firebase/util';
-//import Image from 'next/image';
-//import { withCookies } from "react-cookie";
+import { arrayUnion, getFirestore, updateDoc, addDoc, getDocs,collection, serverTimestamp, doc, deleteDoc, orderBy, query, enableIndexedDbPersistence, getDoc } from 'firebase/firestore';
+import { getDownloadURL, getStorage, uploadBytes, ref, deleteObject } from 'firebase/storage';
 
 // Initialize Firebase
 const firebaseConfig =
@@ -352,8 +348,7 @@ const Dropbox = () =>
 			var codeInput = document.getElementById("code").value;
 			if (codeElem !== null)
 			{
-				codeInput = parseInt(codeElem.value, 10);
-				if (typeof codeInput !== 'number')
+				if (typeof codeInput !== 'string')
 				{
 					fromCookieOnly = true;
 				}
@@ -363,10 +358,10 @@ const Dropbox = () =>
 			//   need to do this part
 			if (!fromCookieOnly)
 			{
-				// If getCodes() returns non-numbers for both codes, then that means there 
+				// If getCodes() returns non-strings for both codes, then that means there 
 				//   aren't any codes in the database (very bad if this occurs because the
 				//   itinerary and dropbox will be inaccessible)
-				if (typeof adminCode !== 'number' && typeof regularCode !== 'number')
+				if (typeof adminCode !== 'string' && typeof regularCode !== 'string')  // changed from number to string
 				{
 					if (wrongCodeElem !== null)
 					{
