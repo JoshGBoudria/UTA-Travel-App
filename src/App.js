@@ -14,6 +14,7 @@ import Converter from './pages/converter';
 import Dropbox from './pages/dropbox';
 import Itinerary from './pages/itinerary';
 import Translation from './pages/translation';
+import Admin from './pages/admin';
 
 function App()
 {
@@ -29,6 +30,7 @@ function App()
 					<Route path='/translation' element={<Translation />} />
 					<Route path='/dropbox' element={<Dropbox />} />
 					<Route path='/contacts' element={<Contacts />} />
+					<Route path='/admin' element={<Admin />} />
 				</Routes>
 			</Router>
 		</div>
