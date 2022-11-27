@@ -4,40 +4,39 @@
  * 
  */
 
+import React, { useState } from 'react';
+import {FaBars} from 'react-icons/fa'
+import { RiMenu3Line, RiCloseLine } from 'react-icons/ri';
+import { Nav, NavbarContainer, NavLogo, MobileIcon, NavMenu, NavItem, NavLinks } from "./NavbarElements";
 
-import React from "react";
-import { Nav, NavLink, NavMenu } 
-    from "./NavbarElements";
   
-const Navbar = () => {
+const Navbar = ({ toggle }) => {
     return (
         <>
             <Nav>
-                {/* Creates the layout for the navbar at the top of the screen.*/}
+            <NavbarContainer>
+                <NavLogo to='/'>UTA</NavLogo>
+                <MobileIcon onClick={toggle}>
+                    <FaBars />
+                </MobileIcon>
                 <NavMenu>
-                    { /* Links to each page */}
-                    <NavLink to="/" activestyle='true'>
-                        Home
-                    </NavLink>
-                    <NavLink to="/itinerary" activestyle='true'>
-                        Itinerary and Calendar
-                    </NavLink>
-                    <NavLink to="/converter" activestyle='true'>
-                        Currency Converter
-                    </NavLink>
-                    <NavLink to="/translation" activestyle='true'>
-                        Audible Translations
-                    </NavLink>
-                    <NavLink to="/dropbox" activestyle='true'>
-                        Dropbox
-                    </NavLink>
-                    <NavLink to="/contacts" activestyle='true'>
-                        Emergency Contacts
-                    </NavLink>
-                    <NavLink to="/admin" activestyle='true'>
-                        Admin
-                    </NavLink>
+                    <NavItem>
+                        <NavLinks to="itinerary">Itinerary and Calendar</NavLinks>
+                    </NavItem>
+                    <NavItem>
+                        <NavLinks to="converter">Currency Converter</NavLinks>
+                    </NavItem>
+                    <NavItem>
+                        <NavLinks to="translations">Audible Translations</NavLinks>
+                    </NavItem>
+                    <NavItem>
+                        <NavLinks to="dropbox">Dropbox</NavLinks>
+                    </NavItem>
+                    <NavItem>
+                        <NavLinks to="contacts">Emergency Contacts</NavLinks>
+                    </NavItem>
                 </NavMenu>
+            </NavbarContainer>
             </Nav>
         </>
     );
