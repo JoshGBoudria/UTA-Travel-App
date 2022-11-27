@@ -4,13 +4,13 @@
  * 
  */
 
+
 import React, { useState } from 'react';
 import {FaBars} from 'react-icons/fa'
 import { RiMenu3Line, RiCloseLine } from 'react-icons/ri';
 import { Nav, NavbarContainer, NavLogo, MobileIcon, NavMenu, NavItem, NavLinks } from "./NavbarElements";
-
   
-const Navbar = ({ toggle }) => {
+const Navbar =  ({ toggle }) => {
     return (
         <>
             <Nav>
@@ -27,13 +27,16 @@ const Navbar = ({ toggle }) => {
                         <NavLinks to="converter">Currency Converter</NavLinks>
                     </NavItem>
                     <NavItem>
-                        <NavLinks to="translations">Audible Translations</NavLinks>
+                        <NavLinks to="translation">Audible Translations</NavLinks>
                     </NavItem>
                     <NavItem>
                         <NavLinks to="dropbox">Dropbox</NavLinks>
                     </NavItem>
                     <NavItem>
                         <NavLinks to="contacts">Emergency Contacts</NavLinks>
+                    </NavItem>
+                    <NavItem>
+                        <NavLinks to="admin">Admin</NavLinks>
                     </NavItem>
                 </NavMenu>
             </NavbarContainer>
