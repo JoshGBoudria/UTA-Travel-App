@@ -5,65 +5,27 @@
  */
 
 import React from "react";
-//import 'App.css';
-/*import 'index.css';*/
 
 const Home = () =>
 {
     // Initialize the variable to hold the index of which image is currently set as the background
-    var index = 1;
+    var index = 0;
     // Function to change the background image of the header to the current index's background image
     function changeBK()
     {
-        // Checks to see if the current image is the last of the five or not
-        if (index === 5)
-        {
-            // Adds 1 to the index if it is not
-            index = 1;
-        }
-        else 
-        {
-            // Resets the index back to 0 if it is
-            index++;
-        }
+        // If the current index is 4, set it to 0; otherwise, add 1 to it
+        index = index === 4 ? 0 : index + 1;
 
+        // Element that contains the background image
         var header = document.getElementById("header");
 
-        // The following five if statements change the background image to an image determined by which value index is at.
-        if (index === 1)
+        // Images to display
+        const images = ["url('res/ipb.jpg')", "url('res/grapes.jpg')", "url('res/sega.jpg')", "url('res/building.jpg')", "url('res/bamboo.jpg')"]
+
+        // Changes the background image based on the index value
+        if (header !== null)
         {
-            if (header !== null)
-            {
-                header.style.backgroundImage = "url('ipb.jpg')";
-            }
-        }
-        else if (index === 2)
-        {
-            if (header !== null)
-            {
-                header.style.backgroundImage = "url('grapes.jpg')";
-            }
-        }
-        else if (index === 3)
-        {
-            if (header !== null)
-            {
-                header.style.backgroundImage = "url('sega.jpg')";
-            }
-        }
-        else if (index === 4)
-        {
-            if (header !== null)
-            {
-                header.style.backgroundImage = "url('building.jpg')";
-            }
-        }
-        else if (index === 5)
-        {
-             if (header !== null)
-             {
-                header.style.backgroundImage = "url('bamboo.jpg')";
-             }
+            header.style.backgroundImage = images[index];
         }
     }
 
@@ -73,13 +35,11 @@ const Home = () =>
     return (
         <>
             <head>
-                {/* Link the manifest.json file so that the PWA can be intalled */}
                 <link rel="shortcut icon" href="#" />
                 <link rel="stylesheet" href="App.css" />
                 <meta charSet="UTF-8" />
                 <meta name="viewport" content="width = device-width, initial-scale = 1.0" />
                 <meta http-equiv="X-UA-Compatible" content="ie = edge" />
-                {/*<script src="app.js"> </script>*/}
                 <title> UTA Japan Trip App </title>
             </head>
             <div>
