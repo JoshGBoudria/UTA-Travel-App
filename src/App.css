@@ -19,8 +19,8 @@ img {
   }
 }
 
-.App-Converter {
-}
+/*.App-Converter {
+}*/
 
 .App-Translation {
   justify-content: space-between;
@@ -35,7 +35,7 @@ input, button {
 }
 
 .App-header {
-  background-image: url("ipb.jpg");
+  background-image: url("/res/ipb.jpg");
   background-size: cover;
   background-position: center;
   min-height: 720px;
