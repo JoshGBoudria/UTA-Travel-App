@@ -1,16 +1,21 @@
+/*
+ * Bryson Neel 1001627866
+*/
+
 // Import Workbox for serviceWorker functions
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.0.2/workbox-sw.js');
 
+// Assets to cache when the app starts
 const static_assets =
 [
 	'/index.html',
 	'/app.js',
 	'/app.css',
-	'/ipb.jpg',
-	'/bamboo.jpg',
-	'/building.jpg',
-	'/grapes.jpg',
-	'sega.jpg',
+	'/res/ipb.jpg',
+	'/res/bamboo.jpg',
+	'/res/building.jpg',
+	'/res/grapes.jpg',
+	'/res/sega.jpg',
 	'/manifest.json',
 	'/flag64.png',
 	'/flag96.png',
@@ -50,7 +55,6 @@ const static_assets =
 // Runs when the serviceWorker is installed
 self.addEventListener('install', e =>
 {
-	console.log('Service worker installed');
 	e.waitUntil(
 		caches.open("static").then(cache =>  // doesn't have to be named "static"
 		{

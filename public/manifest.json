@@ -119,7 +119,7 @@
 		{
 			"name": "Audio Translations",
 			"description": "Audio translations of common Japanese phrases",
-			"url": "/translations",
+			"url": "/translation",
 			"icons":
 			[
 				{
