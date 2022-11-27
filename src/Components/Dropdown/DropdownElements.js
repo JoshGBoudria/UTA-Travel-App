@@ -71,7 +71,7 @@ export const DropdownLink = styled(Link)`
     cursor: pointer;
     
     &:hover {
-        color: #01bf71;
+        color: #7EC8E3;
         transition: 0.2s ease-in-out;
     }
 `;
@@ -92,7 +92,7 @@ export const DropdownRoute = styled(LinkR)`
     &:hover {
         transition: all 0.2s ease-in-out;
         background: #fff;
-        color: #010606;
+        color: #7EC8E3;
     }
 `;
 
