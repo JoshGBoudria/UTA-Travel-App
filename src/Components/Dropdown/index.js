@@ -20,9 +20,10 @@ const Dropdown = ({isOpen, toggle }) => {
                 <DropdownMenu>
                     <DropdownLink to="itinerary" onClick={toggle}>Itinerary and Calendar</DropdownLink>
                     <DropdownLink to="converter" onClick={toggle}>Currency Converter</DropdownLink>
-                    <DropdownLink to="translations" onClick={toggle}>Audible Translations</DropdownLink>
+                    <DropdownLink to="translation" onClick={toggle}>Audible Translations</DropdownLink>
                     <DropdownLink to="dropbox" onClick={toggle}>Dropbox</DropdownLink>
                     <DropdownLink to="contacts" onClick={toggle}>Emergency Contacts</DropdownLink>
+                    <DropdownLink to="admin" onClick={toggle}>Emergency Contacts</DropdownLink>
                 </DropdownMenu>
             </DropdownW>
         </DropdownContainer>
