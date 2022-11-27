@@ -23,7 +23,7 @@ const Dropdown = ({isOpen, toggle }) => {
                     <DropdownLink to="translation" onClick={toggle}>Audible Translations</DropdownLink>
                     <DropdownLink to="dropbox" onClick={toggle}>Dropbox</DropdownLink>
                     <DropdownLink to="contacts" onClick={toggle}>Emergency Contacts</DropdownLink>
-                    <DropdownLink to="admin" onClick={toggle}>Emergency Contacts</DropdownLink>
+                    <DropdownLink to="admin" onClick={toggle}>Admin</DropdownLink>
                 </DropdownMenu>
             </DropdownW>
         </DropdownContainer>
