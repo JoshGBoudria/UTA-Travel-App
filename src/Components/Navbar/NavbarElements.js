@@ -25,7 +25,8 @@ export const Nav = styled.nav`
     transition: 0.8s all ease;
     }
 `;
-  
+
+// Creates the container for the nav bar.
 export const NavbarContainer = styled.div`
     display: flex;
     justify-content: space-between;
@@ -36,7 +37,7 @@ export const NavbarContainer = styled.div`
     max-width: 1100px;
 `;
   
-// Creates the style for the words in the navigation bar.
+// Creates the words or image used as a logo and is used to store the link it leads to.
 export const NavLogo = styled(LinkR)`
     color: #fff;
     justify-self: flex-start;
@@ -49,6 +50,7 @@ export const NavLogo = styled(LinkR)`
     text-decoration: none;
 `;
   
+// Styles the FaBars used to open the dropdown menu and makes it so that it only shows when on mobile.
 export const MobileIcon = styled.div`
     display: none;
 
@@ -64,6 +66,7 @@ export const MobileIcon = styled.div`
     }
 `;
   
+// Creates the style for the nav bar itself with the words listed in it.
 export const NavMenu = styled.ul`
     display: flex;
     align-items: center;
@@ -76,11 +79,13 @@ export const NavMenu = styled.ul`
     }
 `;
 
+// Creates the style for the words in the nav bar.
 export const NavItem = styled.li`
     align-items: center;
     font-size: 22px;
 `;
   
+// Creates the holder for the links connected to each of the items in the nav bar.
 export const NavLinks = styled(Link)`
     color: #fff;
     display: flex;
@@ -94,4 +99,3 @@ export const NavLinks = styled(Link)`
         border-bottom: 3px solid #7EC8E3;
     }
 `;
-
