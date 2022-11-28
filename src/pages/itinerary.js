@@ -39,6 +39,7 @@ const firebaseConfig =
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const db = getFirestore();
 
+// Used for verifying the date and time formats
 const dateRegExp = /^[0-9]{4}\-[0-9]{2}\-[0-9]{2}/;
 const timeRegExp = /^[0-2][0-9]\:[0-9]{2}/;
 
@@ -205,6 +206,8 @@ async function check_code()
 	}
 }
 
+// Called when admin clicks the submit button for a new event after entering the title, start date,
+//   end date, start time, and end time
 async function createNewEvent()
 {
 	const titleElem = document.getElementById("Title");
@@ -212,17 +215,26 @@ async function createNewEvent()
 	const endElem = document.getElementById("End");
 	const startTimeElem = document.getElementById("StartTime");
 	const endTimeElem = document.getElementById("EndTime");
+	
+	// Check to make sure the elements have rendered
 	if (startElem && endElem && startTimeElem && endTimeElem && titleElem)
 	{
+		// Make sure the values from those elements exists
 		if (startElem.value && endElem.value && startTimeElem.value && endTimeElem.value && titleElem.value)
 		{
+			// The title doesn't need to be checked
 			const titleForm = titleElem.value;
+			// Check the dates using the date regular expression
 			if (dateRegExp.test(startElem.value) && dateRegExp.test(endElem.value))
 			{
+				// Check the times using the time regular expression
 				if (timeRegExp.test(startTimeElem.value) && timeRegExp.test(endTimeElem.value))
 				{
+					// The start is set to the start date with a 'T' and the start time appended
 					const startForm = `${startElem.value}T${startTimeElem.value}:00`;
+					// The end is set to the end date with a 'T' and the end time appended
 					const endForm = `${endElem.value}T${endTimeElem.value}:00`;
+					// Create and upload the event to the database
 					const eventRef = await addDoc(collection(db, 'Events'), {
 						TITLE: titleForm,
 						START: startForm,
@@ -243,9 +255,12 @@ async function createNewEvent()
 	}
 }
 
+// Called when admin clicks submit button for deleting an event after they entered the title of the
+//   event they want to delete
 async function deleteEvent()
 {
 	const deleteTitleElem = document.getElementById('DeleteTitle');
+	// boolean that lets us know if anything was deleted
 	var successBool = false;
 	if (deleteTitleElem)
 	{
@@ -255,13 +270,15 @@ async function deleteEvent()
 			
 			const eventsRef = collection(db, 'Events');
 			
-			// Get the document reference from Firestore using the title
+			// Get all documents where the title is equal to the title the admin entered
 			var q = query(eventsRef, where('TITLE', '==', titleToDelete));
 			const querySnapshot = await getDocs(q);
+			// Delete each document found with the matching title
 			querySnapshot.forEach((d) =>
 			{
 				const ref = doc(db, "Events", d.id);
 				deleteDoc(ref);
+				// A delete was made, so set successBool to true
 				successBool = true;
 			});
 		}
@@ -281,15 +298,33 @@ function Calendarfxn()
 {
 	const [newEvent, setNewEvent] = useState({ title: "", start: "", end: "" });
 	const [allEvents, setAllEvents] = useState([]);
-
+	
 	const [selectedEvent, setSelectedEvent] = useState(undefined);
-	const [modalState, setModalState] = useState(false);
+	
+	// The calendar is displayed based on the user's device width
+	const [width, setWidth] = useState(window.innerWidth);
+	
+	function widthChange()
+	{
+		setWidth(window.innerWidth);
+	}
 
+	// When the user's device width changes, call widthChange() to update its value
+	useEffect(() =>
+	{
+		window.addEventListener('resize', widthChange);
+		return () =>
+		{
+			window.removeEventListener('resize', widthChange);
+		}
+	}, []);
+	
 	const handleSelectedEvent = (event) =>
 	{
 		setSelectedEvent(event)
 	}
-
+	
+	// When user selects, an event, display that event's title to them
 	useEffect(() =>
 	{
 		if (selectedEvent)
@@ -301,13 +336,15 @@ function Calendarfxn()
 			}
 		}
 	}, [selectedEvent])
-
+	
+	// The events will be fetched from the database when the page loads
 	useEffect(() =>
 	{
 		fetchEvents();
 	}, [])
 	window.addEventListener('load', fetchEvents);
-
+	
+	// Gets the events from the database
 	async function fetchEvents()
 	{
 		var eventsTemp = [];
@@ -338,7 +375,9 @@ function Calendarfxn()
 				{
 					startTime = startTime + 'AM';
 				}
+				// Get the event title, start date, and end date
 				const eventObj = {
+					// The title will also show the start time
 					title: DocumentSnapshot.get("TITLE") + ' (' + startTime + ')',
 					start: new Date(DocumentSnapshot.get("START")),
 					end: new Date(DocumentSnapshot.get("END"))
@@ -349,6 +388,7 @@ function Calendarfxn()
 		});
 	}
 
+	// Admin view
 	if (sessionStorage.getItem('_userLevel') === '2')
 	{
 		return (
@@ -356,6 +396,7 @@ function Calendarfxn()
 				<h1>Calendar</h1>
 				<h2>Add New Event</h2>
 				<div>
+					{/* Required text input for creating a new event */}
 					<input type="text" id="Title" placeholder="Add Title" style={{ width: "40%", marginRight: "10px" }} />
 					<br></br>
 					<input type="text" id="Start" placeholder="Start Date (YYYY-MM-DD)" style={{ width: "40%", marginRight: "10px" }} />
@@ -367,50 +408,58 @@ function Calendarfxn()
 					<input type="text" id="EndTime" placeholder="End Time (HH:MM)" style={{ width: "40%", marginRight: "10px" }} />
 					<br></br>
 					<button style={{ margintop: "10px" }}
+						{/* The button that calls createNewEvent */}
 						onClick={createNewEvent}>Submit</button>
 				</div>
 				<br></br>
 				<h2>Delete Event</h2>
 				<div>
+					{/* Required text input for deleting an event */}
 					<input type="text" id="DeleteTitle" placeholder="Title of event to delete" style={{ width: "40%", marginRight: "10px" }} />
 					<button style={{ margintop: "10px" }}
+						{/* The button that calls deleteEvent */}
 						onClick={deleteEvent}>Submit</button>
 				</div>
-				<Calendar
-					selectable
-					localizer={localizer}
-					events={allEvents}
-					startAccessor="start"
-					endAccessor="end"
-					style={{ height: 700, width: 500, margin: "10px" }}
-					onSelectEvent={(e) => handleSelectedEvent(e)}
-				/>
+				<br></br>
+				<center>
+					{/* Show the calendar */}
+					<Calendar
+						selectable
+						localizer={localizer}
+						{/* Get the events from the allEvents array */}
+						events={allEvents}
+						startAccessor="start"
+						endAccessor="end"
+						{/* Width is 90% of the user's device width */}
+						style={{ height: 700, width: (width * 0.9), margin: "10px" }}
+						{/* Call handleSelectedEvent when user selects an event */}
+						onSelectEvent={(e) => handleSelectedEvent(e)}
+					/>
+				</center>
 			</div>
 		)
 	}
+	// Student view
 	else if (sessionStorage.getItem('_userLevel') === '1')
 	{
-		return(
+		return (
 			<div className="App">
 				<h1>Calendar</h1>
-				<label style={{ fontSize: 14 }}>
-					Enter admin code to add and delete events:&nbsp;
-				</label>
-				<input type="password" id="code" />
-				<button onClick={check_code} type="button">
-					Submit
-				</button>
-				<p id="wrong_code"></p>
-				<Calendar
-					localizer={localizer}
-					events={allEvents}
-					startAccessor="start"
-					endAccessor="end"
-					style={{ height: 1000, margin: "50px" }}
-				/>
+				<center>
+					<Calendar
+						selectable
+						localizer={localizer}
+						events={allEvents}
+						startAccessor="start"
+						endAccessor="end"
+						style={{ height: 700, width: (width * 0.9), margin: "10px" }}
+						onSelectEvent={(e) => handleSelectedEvent(e)}
+					/>
+				</center>
 			</div>
 		)
 	}
+	// Other user view
 	else
 	{
 		return (
