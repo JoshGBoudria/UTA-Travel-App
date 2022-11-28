@@ -13,10 +13,13 @@ import { DropdownContainer, Icon, CloseIcon, DropdownW, DropdownMenu, DropdownLi
 const Dropdown = ({isOpen, toggle }) => {
     return (
         <DropdownContainer isOpen={isOpen} onClick={toggle}>
+            {/*Create the close icon for the dropdown menu.*/}
             <Icon isOpen={toggle}>
                 <CloseIcon />
             </Icon>
+            {/*Create the wrapper to hold the contents of the dropdown menu.*/}
             <DropdownW>
+                {/*Create the dropdown menu contents.*/}
                 <DropdownMenu>
                     <DropdownLink to="itinerary" onClick={toggle}>Itinerary and Calendar</DropdownLink>
                     <DropdownLink to="converter" onClick={toggle}>Currency Converter</DropdownLink>
