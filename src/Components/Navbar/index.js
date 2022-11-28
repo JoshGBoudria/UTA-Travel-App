@@ -13,12 +13,16 @@ import { Nav, NavbarContainer, NavLogo, MobileIcon, NavMenu, NavItem, NavLinks }
 const Navbar =  ({ toggle }) => {
     return (
         <>
+            {/*Creates the Navbar.*/}
             <Nav>
             <NavbarContainer>
+                {/*Creates the home page button.*/}
                 <NavLogo to='/'>UTA</NavLogo>
+                {/*Creates the dropdown menu button and selects the image used for it.*/}
                 <MobileIcon onClick={toggle}>
                     <FaBars />
                 </MobileIcon>
+                {/*Creates the menu setup on the navbar.*/}
                 <NavMenu>
                     <NavItem>
                         <NavLinks to="itinerary">Itinerary and Calendar</NavLinks>
