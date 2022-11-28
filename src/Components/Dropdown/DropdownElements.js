@@ -11,6 +11,7 @@ import styled from "styled-components";
 import {Link as LinkR} from 'react-router-dom'
 import { NavLink as Link } from "react-router-dom";
 
+// Creates the style for the dropdown container that will hold the dropdown menu.
 export const DropdownContainer = styled.aside`
     position: fixed;
     z-index: 999;
@@ -26,10 +27,12 @@ export const DropdownContainer = styled.aside`
     top: ${({ isOpen }) => (isOpen ? '0' : '-100%')};
 `;
 
+// Creates the style for the close icon to close out of the dropdown menu.
 export const CloseIcon = styled(FaTimes)`
     color: #fff;
 `;
   
+// Creates the style for the icon used to open the dropdown menu.
 export const Icon = styled.div`
 position: absolute;
 top: 1.2rem;
@@ -40,10 +43,12 @@ cursor: pointer;
 outline: none;
 `;
 
+// Creates the wrapper for the dropdown menu.
 export const DropdownW = styled.div`
     color: #fff;
 `;
 
+// Creates the style for the dropdown menu itself.
 export const DropdownMenu = styled.ul`
     display: none;
     grid-template-columns: lfr;
@@ -55,9 +60,12 @@ export const DropdownMenu = styled.ul`
         grid-template-rows: repeat(6, 70px);
         background: #000000;
         background-size: cover;
+        top: 80px;
+        right: 0px;
     }
 `;
 
+// Creates the style for the links.
 export const DropdownLink = styled(Link)`
     display: flex;
     align-items: center;
@@ -76,6 +84,7 @@ export const DropdownLink = styled(Link)`
     }
 `;
 
+// Creates the style for the logo link to home page.
 export const DropdownRoute = styled(LinkR)`
     border-radius: 50px;
     background: #01bf71;
