@@ -30,11 +30,12 @@ function App()
     
     return (
         <div className="App">
-                {/*Creates the navigation bar at the top of the page.*/}
                 <Router>
+                    {/*Creates the navigation bar at the top of the page and the dropdown menu.*/}
                     <Dropdown isOpen={isOpen} toggle={toggle} />
                     <Navbar toggle={toggle} />
                     <Routes>
+                        {/*Routes to the other pages of the app.*/}
                         <Route exact path='/' element={<Home />} />
                         <Route path='/itinerary' element={<Itinerary />} />
                         <Route path='/converter' element={<Converter />} />
