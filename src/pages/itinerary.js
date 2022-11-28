@@ -40,7 +40,7 @@ const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const db = getFirestore();
 
 const dateRegExp = /^[0-9]{4}\-[0-9]{2}\-[0-9]{2}/;
-const timeRegExp = /^[0-1][0-9]\:[0-9]{2}/;
+const timeRegExp = /^[0-2][0-9]\:[0-9]{2}/;
 
 // calculates the current date and creates buffer dates for month view
 const localizer = dateFnsLocalizer({
@@ -276,22 +276,31 @@ async function deleteEvent()
 	}
 }
 
-/*
-function dateFormat(dateString, timeString)
-{
-	const sepDate = dateString.split("-");
-	const finalString = sepDate[2] + "-" + sepDate[0] + "-" + sepDate[1] + "T" + timeString + ":00";
-	return finalString;
-}
-*/
-
-
-
 //Function to display the calendar
 function Calendarfxn()
 {
 	const [newEvent, setNewEvent] = useState({ title: "", start: "", end: "" });
 	const [allEvents, setAllEvents] = useState([]);
+
+	const [selectedEvent, setSelectedEvent] = useState(undefined);
+	const [modalState, setModalState] = useState(false);
+
+	const handleSelectedEvent = (event) =>
+	{
+		setSelectedEvent(event)
+	}
+
+	useEffect(() =>
+	{
+		if (selectedEvent)
+		{
+			if (selectedEvent.title)
+			{
+				alert(selectedEvent.title);
+				setSelectedEvent(undefined);
+			}
+		}
+	}, [selectedEvent])
 
 	useEffect(() =>
 	{
@@ -306,17 +315,40 @@ function Calendarfxn()
 		{
 			QuerySnapshot.forEach(DocumentSnapshot =>
 			{
+				// Time formatting (24 hour time to AM/PM)
+				var startTime = DocumentSnapshot.get("START").substring(11, 16);
+				if (startTime.substring(0, 1) === '0')
+				{
+					if (startTime.substring(0, 2) === '00')
+					{
+						startTime = '12' + startTime.substring(2, 16) + 'AM';
+					}
+					else
+					{
+						startTime = startTime.substring(1, 5) + 'AM';
+					}
+				}
+				else if (parseInt(startTime.substring(0, 2)) >= 13)
+				{
+					const a = parseInt(startTime.substring(0, 2)) - 12;
+					const b = a.toString();
+					startTime = b + startTime.substring(2, 5) + 'PM';
+				}
+				else
+				{
+					startTime = startTime + 'AM';
+				}
 				const eventObj = {
-					title: DocumentSnapshot.get("TITLE"),
+					title: DocumentSnapshot.get("TITLE") + ' (' + startTime + ')',
 					start: new Date(DocumentSnapshot.get("START")),
 					end: new Date(DocumentSnapshot.get("END"))
 				}
-				console.log(eventObj.start);
 				eventsTemp = [...eventsTemp, eventObj];
 			});
 			setAllEvents(eventsTemp);
 		});
 	}
+
 	if (sessionStorage.getItem('_userLevel') === '2')
 	{
 		return (
@@ -324,27 +356,35 @@ function Calendarfxn()
 				<h1>Calendar</h1>
 				<h2>Add New Event</h2>
 				<div>
-					<input type="text" id="Title" placeholder="Add Title" style={{ width: "20%", marginRight: "10px" }} />
-					<input type="text" id="Start" placeholder="Start Date (YYYY-MM-DD)" style={{ width: "20%", marginRight: "10px" }} />
-					<input type="text" id="End" placeholder="End Date (YYYY-MM-DD)" style={{ width: "20%", marginRight: "10px" }} />
-					<input type="text" id="StartTime" placeholder="Start Time (HH:MM)" style={{ width: "20%", marginRight: "10px" }} />
-					<input type="text" id="EndTime" placeholder="End Time (HH:MM)" style={{ width: "20%", marginRight: "10px" }} />
+					<input type="text" id="Title" placeholder="Add Title" style={{ width: "40%", marginRight: "10px" }} />
+					<br></br>
+					<input type="text" id="Start" placeholder="Start Date (YYYY-MM-DD)" style={{ width: "40%", marginRight: "10px" }} />
+					<br></br>
+					<input type="text" id="End" placeholder="End Date (YYYY-MM-DD)" style={{ width: "40%", marginRight: "10px" }} />
+					<br></br>
+					<input type="text" id="StartTime" placeholder="Start Time (HH:MM)" style={{ width: "40%", marginRight: "10px" }} />
+					<br></br>
+					<input type="text" id="EndTime" placeholder="End Time (HH:MM)" style={{ width: "40%", marginRight: "10px" }} />
+					<br></br>
 					<button style={{ margintop: "10px" }}
 						onClick={createNewEvent}>Submit</button>
 				</div>
 				<br></br>
 				<h2>Delete Event</h2>
 				<div>
-					<input type="text" id="DeleteTitle" placeholder="Title of event to delete" style={{ width: "20%", marginRight: "10px" }} />
+					<input type="text" id="DeleteTitle" placeholder="Title of event to delete" style={{ width: "40%", marginRight: "10px" }} />
 					<button style={{ margintop: "10px" }}
 						onClick={deleteEvent}>Submit</button>
 				</div>
 				<Calendar
+					selectable
 					localizer={localizer}
 					events={allEvents}
 					startAccessor="start"
 					endAccessor="end"
-					style={{ height: 1000, margin: "50px" }} />
+					style={{ height: 700, width: 500, margin: "10px" }}
+					onSelectEvent={(e) => handleSelectedEvent(e)}
+				/>
 			</div>
 		)
 	}
@@ -366,7 +406,8 @@ function Calendarfxn()
 					events={allEvents}
 					startAccessor="start"
 					endAccessor="end"
-					style={{ height: 1000, margin: "50px" }} />
+					style={{ height: 1000, margin: "50px" }}
+				/>
 			</div>
 		)
 	}
