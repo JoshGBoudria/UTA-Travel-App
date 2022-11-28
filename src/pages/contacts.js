@@ -12,8 +12,8 @@ const Contacts = () =>
 	return (
 		<div>
 			{/*Create a header for the Emergency Contacts tab.*/}
-			<h1> Emergency Contacts </h1>
-			<h2>On Call International</h2>
+			<h2> Emergency Contacts </h2>
+			<h3>On Call International</h3>
 			<p>
 				On Call International is the emergency assistance provider for UT System with an
 				international network of medical and security professionals available any time to
@@ -21,7 +21,7 @@ const Contacts = () =>
 				<a href="tel:19786519722">+1 978-651-9722</a>
 				&nbsp;for UT students abroad.
 			</p>
-			<h2>U.S. Department of State Overseas Citizens Services</h2>
+			<h3>U.S. Department of State Overseas Citizens Services</h3>
 			<p>
 				Contact the Overseas Citizens Services at&nbsp;
 				<a href="tel:12025014444">+1 202-501-4444</a>
@@ -29,7 +29,7 @@ const Contacts = () =>
 				you in the event that you are arrested or detained abroad, are robbed, or if you need
 				to report the death or disappearance of a fellow U.S. citizen abroad.
 			</p>
-			<h2>Contact Information for UTA</h2>
+			<h3>Contact Information for UTA</h3>
 			<p>
 				The UTA Study Abroad Office remains available to you in an emergency 24 hours a day.
 				We can be reached Monday through Friday, 8am to 5pm by calling&nbsp;
@@ -39,7 +39,7 @@ const Contacts = () =>
 				<a href="tel:18172723003">+1 817-272-3003</a>
 				, and they will notify the Study Abroad Staff.
 			</p>
-			<h2>US Embassy/Consulates in Japan</h2>
+			<h3>US Embassy/Consulates in Japan</h3>
 			<p>
 				Tokyo (Embassy) phone:&nbsp;
 				<a href="tel:03-3224-5000">03-3224-5000</a>
