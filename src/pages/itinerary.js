@@ -408,7 +408,6 @@ function Calendarfxn()
 					<input type="text" id="EndTime" placeholder="End Time (HH:MM)" style={{ width: "40%", marginRight: "10px" }} />
 					<br></br>
 					<button style={{ margintop: "10px" }}
-						{/* The button that calls createNewEvent */}
 						onClick={createNewEvent}>Submit</button>
 				</div>
 				<br></br>
@@ -417,7 +416,6 @@ function Calendarfxn()
 					{/* Required text input for deleting an event */}
 					<input type="text" id="DeleteTitle" placeholder="Title of event to delete" style={{ width: "40%", marginRight: "10px" }} />
 					<button style={{ margintop: "10px" }}
-						{/* The button that calls deleteEvent */}
 						onClick={deleteEvent}>Submit</button>
 				</div>
 				<br></br>
@@ -426,13 +424,10 @@ function Calendarfxn()
 					<Calendar
 						selectable
 						localizer={localizer}
-						{/* Get the events from the allEvents array */}
 						events={allEvents}
 						startAccessor="start"
 						endAccessor="end"
-						{/* Width is 90% of the user's device width */}
 						style={{ height: 700, width: (width * 0.9), margin: "10px" }}
-						{/* Call handleSelectedEvent when user selects an event */}
 						onSelectEvent={(e) => handleSelectedEvent(e)}
 					/>
 				</center>
@@ -445,6 +440,15 @@ function Calendarfxn()
 		return (
 			<div className="App">
 				<h1>Calendar</h1>
+				<label style={{ fontSize: 14 }}>
+					Enter admin code to add and delete events:&nbsp;
+				</label>
+				<input type="password" id="code" />
+				<button onClick={check_code} type="button">
+					Submit
+				</button>
+				<p id="wrong_code"></p>
+				<br></br>
 				<center>
 					<Calendar
 						selectable
