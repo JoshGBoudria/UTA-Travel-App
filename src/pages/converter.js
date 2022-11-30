@@ -23,7 +23,7 @@ function convert()
 	let toCurrency = to.value;
 
 	// If the user is online, get the rate from the api to do the conversion.
-	if (navigator.onLine)
+	/*if (navigator.onLine)
 	{
 		// Get rates using the exchangerate api
 		fetch(`https://api.exchangerate-api.com/v4/latest/${fromCurrency}`)
@@ -53,17 +53,25 @@ function convert()
 	}
 	// If the user is offline, get the rate from a cookie
 	else
+	{*/
+	if (Cookies.get("yen_to_dollar") && Cookies.get("dollar_to_yen"))
 	{
-		if (typeof Cookies.get("yen_to_dollar") === 'number')
-		{
-			result.innerHTML = `${amount} ${fromCurrency} = ${parseFloat(Cookies.get("yen_to_dollar") * amount).toFixed(2)} ${toCurrency}`;
+			if (fromCurrency === 'JPY')
+			{
+				result.innerHTML = `${amount} ${fromCurrency} = ${parseFloat(Cookies.get("yen_to_dollar") * amount).toFixed(2)} ${toCurrency}`;
+			}
+			else
+			{
+				result.innerHTML = `${amount} ${fromCurrency} = ${parseFloat(Cookies.get("dollar_to_yen") * amount).toFixed(2)} ${toCurrency}`;
+			}
 		}
 		// If the cookie value doesn't exist or isn't a number, let the user know that the rate couldn't be accessed.
 		else
 		{
 			document.getElementById("result").innerHTML = "Conversion rate could not be accessed";
 		}
-	}
+		
+	//}
 }
 
 const Converter = () =>
