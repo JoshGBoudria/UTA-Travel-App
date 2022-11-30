@@ -9,69 +9,62 @@
 
 import React from "react";
 import Cookies from "js-cookie";
-//import '../App.css';
 
 // Does the currency conversion when called
 function convert()
 {
-	// Get the values needed from the document
-	const result = document.getElementById("result");
-	const from = document.getElementById("from");
-	const to = document.getElementById("to");
-	const amount = document.getElementById("amount").value;
-	let fromCurrency = from.value;
-	let toCurrency = to.value;
-
-	// If the user is online, get the rate from the api to do the conversion.
-	/*if (navigator.onLine)
+	// Get the elements needed from the document
+	const resultElem = document.getElementById("result");
+	const optionElem = document.getElementById("option");
+	const amountElem = document.getElementById("amount");
+	
+	var fromCurrency = '';
+	var toCurrency = '';
+	
+	if (resultElem && optionElem && amountElem)
 	{
-		// Get rates using the exchangerate api
-		fetch(`https://api.exchangerate-api.com/v4/latest/${fromCurrency}`)
-			.then(response =>
+		if (optionElem.value && amountElem.value)
+		{
+			const amount = amountElem.value;
+			if (optionElem.value == "Dollar to Yen")
 			{
-				// Returns json text containing the rate
-				return response.json();
-			})
-			.then(data =>
-			{
-				// Gets the rate by calling '.rates' with the currency code ('JPY' or 'USD')
-				let rate = data.rates[toCurrency];
-
-				// Store the rate locally as a cookie
-				Cookies.set("yen_to_dollar", rate, {
-					expires: 14,
-					secure: true,
-					path: "/",
-				});
-
-				// Calculate and display the currency conversion
-				const res = `${amount} ${fromCurrency} = ${parseFloat(rate * amount).toFixed(2)} ${toCurrency}`;
-				result.innerHTML = res;
-				
-			});
-
-	}
-	// If the user is offline, get the rate from a cookie
-	else
-	{*/
-	if (Cookies.get("yen_to_dollar") && Cookies.get("dollar_to_yen"))
-	{
-			if (fromCurrency === 'JPY')
-			{
-				result.innerHTML = `${amount} ${fromCurrency} = ${parseFloat(Cookies.get("yen_to_dollar") * amount).toFixed(2)} ${toCurrency}`;
+				fromCurrency = 'USD';
+				toCurrency = 'JPY';
 			}
 			else
 			{
-				result.innerHTML = `${amount} ${fromCurrency} = ${parseFloat(Cookies.get("dollar_to_yen") * amount).toFixed(2)} ${toCurrency}`;
+				fromCurrency = 'JPY';
+				toCurrency = 'USD';
+			}
+			// The rates are stored in cookie file (from index.js)
+			if (Cookies.get("yen_to_dollar") && Cookies.get("dollar_to_yen"))
+			{
+				if (fromCurrency === 'JPY')
+				{
+					resultElem.innerHTML = `${amount} ${fromCurrency} = ${parseFloat(Cookies.get("yen_to_dollar") * amount).toFixed(2)} ${toCurrency}`;
+				}
+				else if(fromCurrency === 'USD')
+				{
+					resultElem.innerHTML = `${amount} ${fromCurrency} = ${parseFloat(Cookies.get("dollar_to_yen") * amount).toFixed(2)} ${toCurrency}`;
+				}
+			}
+			// If the cookie value doesn't exist, let the user know that the rate couldn't be accessed.
+			else
+			{
+				resultElem.innerHTML = "Conversion rate could not be accessed";
 			}
 		}
-		// If the cookie value doesn't exist or isn't a number, let the user know that the rate couldn't be accessed.
 		else
 		{
-			document.getElementById("result").innerHTML = "Conversion rate could not be accessed";
+			console.log('Document elements\' values not found');
 		}
-		
-	//}
+	}
+	else
+	{
+		console.log('Document elements not found');
+	}
+	
+	
 }
 
 const Converter = () =>
@@ -86,27 +79,18 @@ const Converter = () =>
 			<body>
 				<h1>Currency Converter</h1>
 				<form>
-
-					{/* Create 2 drop-down boxes for the user to choose which currency is
-					  * being converted to and which is being converted from */}
-					<label Text style={{ fontSize: 16 }}> From: </label>
-					<select id="from">
-						<option value="JPY">Japanese Yen</option>
-						<option value="USD">US Dollars</option>
-					</select>
-					<label Text style={{ fontSize: 16 }}> To: </label>
-					<select id="to">
-						<option value="USD">US Dollars</option>
-						<option value="JPY">Japanese Yen</option>
+					<select id="option">
+						<option value="Dollar to Yen">Dollars to Yen</option>
+						<option value="Yen to Dollar">Yen to Dollars</option>
 					</select>
 
 					<label Text style={{ fontSize: 16 }}> Amount: </label>
 					<input type="text" id="amount" />
 
-					{ /* Create button that calls 'convert' when clicked */}
+					{ /* Create button that calls 'convert' when clicked */ }
 					<button onClick={convert} type="button" >Convert</button>
 
-					{ /* Used to display the resulting conversion or error message*/}
+					{ /* Used to display the resulting conversion or error message*/ }
 					<p id="result"></p>
 				</form>
 			</body>
