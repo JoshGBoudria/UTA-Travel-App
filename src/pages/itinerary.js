@@ -12,12 +12,12 @@ import startOfWeek from "date-fns/startOfWeek";
 import getDay from "date-fns/getDay";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-datepicker/dist/react-datepicker.css";
-import DatePicker from "react-datepicker";
+//import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Cookies from "js-cookie";
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { arrayUnion, getFirestore, updateDoc, addDoc, getDocs, collection, serverTimestamp, doc, deleteDoc, orderBy, query, enableIndexedDbPersistence, getDoc, where } from 'firebase/firestore';
+//import { getAnalytics } from "firebase/analytics";
+import { /*arrayUnion,*/ getFirestore, /*updateDoc,*/ addDoc, getDocs, collection, /*serverTimestamp,*/ doc, deleteDoc, /*orderBy,*/ query, /*enableIndexedDbPersistence, getDoc,*/ where } from 'firebase/firestore';
 
 //Establishes calendar to base on US date and time 
 const locales = {
@@ -335,7 +335,7 @@ function Calendarfxn()
 				setSelectedEvent(undefined);
 			}
 		}
-	}, [selectedEvent])
+	}, [selectedEvent]);
 	
 	// The events will be fetched from the database when the page loads
 	useEffect(() =>
@@ -427,7 +427,7 @@ function Calendarfxn()
 						events={allEvents}
 						startAccessor="start"
 						endAccessor="end"
-						style={{ height: 700, width: (width * 0.9), margin: "10px" }}
+						style={{ height: 1000, width: (width * 0.9), margin: "10px" }}
 						onSelectEvent={(e) => handleSelectedEvent(e)}
 					/>
 				</center>
@@ -456,14 +456,14 @@ function Calendarfxn()
 						events={allEvents}
 						startAccessor="start"
 						endAccessor="end"
-						style={{ height: 700, width: (width * 0.9), margin: "10px" }}
+						style={{ height: 1000, width: (width * 0.9), margin: "10px" }}
 						onSelectEvent={(e) => handleSelectedEvent(e)}
 					/>
 				</center>
 			</div>
 		)
 	}
-	// Other user view
+	// Other user view (not loggin in)
 	else
 	{
 		return (

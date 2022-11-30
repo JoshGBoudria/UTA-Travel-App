@@ -20,7 +20,7 @@ const Home = () =>
         var header = document.getElementById("header");
 
         // Images to display
-        const images = ["url('res/ipb.jpg')", "url('res/grapes.jpg')", "url('res/sega.jpg')", "url('res/building.jpg')", "url('res/bamboo.jpg')"]
+        const images = ["url('res/home1.jpg')", "url('res/home2.jpg')", "url('res/home3.jpg')", "url('res/home4.jpg')", "url('res/home5.jpg')"]
 
         // Changes the background image based on the index value
         if (header !== null)
