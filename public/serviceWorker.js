@@ -11,11 +11,11 @@ const static_assets =
 	'/index.html',
 	'/app.js',
 	'/app.css',
-	'/res/ipb.jpg',
-	'/res/bamboo.jpg',
-	'/res/building.jpg',
-	'/res/grapes.jpg',
-	'/res/sega.jpg',
+	'/res/home1.jpg',
+	'/res/home2.jpg',
+	'/res/home3.jpg',
+	'/res/home4.jpg',
+	'/res/home.jpg',
 	'/manifest.json',
 	'/flag64.png',
 	'/flag96.png',
@@ -56,10 +56,9 @@ const static_assets =
 self.addEventListener('install', e =>
 {
 	e.waitUntil(
-		caches.open("static").then(cache =>  // doesn't have to be named "static"
+		caches.open("static").then(cache =>
 		{
 			// Cache these two files for offline use
-			//return cache.addAll(static_assets);
 			cache.addAll(static_assets);
 		})
 	);
@@ -68,7 +67,6 @@ self.addEventListener('install', e =>
 // Runs when a fetch request is made to the serviceWorker
 self.addEventListener('fetch', (e) =>
 {
-	//console.log(`Fetch request for ${e.request.url}`);
 	e.respondWith(
 		caches.match(e.request).then(response =>
 		{
